@@ -1,0 +1,259 @@
+/* ==================================
+   SIDEBAR STYLES (Modern Premium)
+   ================================== */
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    background-color: var(--bg-sidebar);
+    border-right: 1px solid #f1f5f9;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 50;
+    transition: var(--transition-normal);
+}
+
+.sidebar-header {
+    padding: 32px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--primary-light) 0%, rgba(15, 169, 172, 0.05) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(15, 169, 172, 0.1);
+}
+
+.brand-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.03em;
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 10px 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Custom Nav Scrollbar */
+.sidebar-nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all var(--transition-fast);
+}
+
+.nav-item svg {
+    color: var(--text-light);
+    transition: var(--transition-fast);
+}
+
+.nav-item:hover {
+    background-color: #f1f5f9;
+    color: var(--primary);
+}
+
+.nav-item:hover svg {
+    color: var(--primary);
+    transform: scale(1.1);
+}
+
+.nav-item.active {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-end) 100%);
+    color: var(--text-white);
+    box-shadow: 0 10px 15px -3px var(--primary-glow);
+}
+
+.nav-item.active svg {
+    color: var(--text-white) !important;
+}
+
+.sidebar-footer {
+    padding: 24px 16px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: var(--radius-md);
+    border: 1px solid #f1f5f9;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    box-shadow: 0 4px 6px -1px var(--primary-glow);
+}
+
+.user-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.user-role-admin {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #ef4444;
+    background: #fef2f2;
+    padding: 2px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    border: 1px solid #fee2e2;
+}
+
+.user-role {
+    font-size: 0.75rem;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid transparent;
+    background: #fff;
+    color: #64748b;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.logout-btn:hover {
+    background-color: #fef2f2;
+    color: var(--danger);
+    border-color: #fee2e2;
+}
+
+.logout-btn svg {
+    transition: transform var(--transition-fast);
+}
+
+.logout-btn:hover svg {
+    transform: translateX(2px);
+}
+
+/* ==================================
+   LAYOUT MAIN CONTENT
+   ================================== */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--bg-main);
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-wrapper {
+    padding: 40px;
+    flex: 1;
+    max-width: 1600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ==================================
+   SIDEBAR HOVER SPOTLIGHT EFFECT
+   ================================== */
+.sidebar-nav {
+    transform-style: preserve-3d;
+}
+
+/* Dim non-hovered items when the nav is hovered, to make the hovered item pop */
+.sidebar-nav:hover .nav-item-group:not(:hover),
+.sidebar-nav:hover>.nav-item:not(:hover) {
+    opacity: 0.5;
+    transform: scale(0.98);
+    filter: grayscale(20%);
+}
+
+/* Ensure the sub-items inside a hovered group don't dim unless specifically not hovered?
+   Actually, inside the group, we want the sub-items to not dim if the group is hovered. */
+.sidebar-nav .nav-item-group:hover .sub-menu .sub-nav-item:not(:hover) {
+    opacity: 0.7;
+    transform: none;
+}
+
+.sidebar-nav .nav-item:hover,
+.sidebar-nav .nav-item-group:hover,
+.sidebar-nav .nav-item-group:hover>.nav-item {
+    opacity: 1 !important;
+    transform: scale(1.02);
+    filter: grayscale(0%) !important;
+    z-index: 10;
+}
+
+/* ==================================
+   SUB-MENU ANIMATION
+   ================================== */
+.smooth-slide-down {
+    transform-origin: top;
+    animation: slideDownMenu 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideDownMenu {
+    0% {
+        opacity: 0;
+        transform: translateY(-8px) scaleY(0.96);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
+    }
+}
