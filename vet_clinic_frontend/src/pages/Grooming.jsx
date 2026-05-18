@@ -25,7 +25,7 @@ import {
     Trash2
 } from 'lucide-react';
 
-const API = 'https://vet-clinic-1j57.onrender.com/api/v1';
+const API = 'https://vet-clinic-backend-tgtd.onrender.com/api/v1';
 
 const Grooming = () => {
     const { user } = useAuth();

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const API = 'https://vet-clinic-1j57.onrender.com/api/v1';
+const API = 'https://vet-clinic-backend-tgtd.onrender.com/api/v1';
 const authHeader = () => ({ Authorization: `Bearer ${sessionStorage.getItem('token')}` });
 
 const TYPE_META = {

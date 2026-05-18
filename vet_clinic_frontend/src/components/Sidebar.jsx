@@ -38,7 +38,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         const fetchWaiting = async () => {
             try {
                 const token = sessionStorage.getItem('token');
-                const res = await fetch('https://vet-clinic-1j57.onrender.com/api/v1/appointments', {
+                const res = await fetch('https://vet-clinic-backend-tgtd.onrender.com/api/v1/appointments', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -63,7 +63,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         const fetchGrooming = async () => {
             try {
                 const token = sessionStorage.getItem('token');
-                const res = await fetch('https://vet-clinic-1j57.onrender.com/api/v1/grooming', {
+                const res = await fetch('https://vet-clinic-backend-tgtd.onrender.com/api/v1/grooming', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -86,7 +86,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             try {
                 const token = sessionStorage.getItem('token');
                 // Đếm lịch hẹn READY_FOR_PAYMENT
-                const aptRes = await fetch('https://vet-clinic-1j57.onrender.com/api/v1/appointments', {
+                const aptRes = await fetch('https://vet-clinic-backend-tgtd.onrender.com/api/v1/appointments', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const aptData = await aptRes.json();
@@ -95,7 +95,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                     : 0;
 
                 // Đếm đơn grooming hoàn tất chưa thanh toán
-                const grRes = await fetch('https://vet-clinic-1j57.onrender.com/api/v1/grooming', {
+                const grRes = await fetch('https://vet-clinic-backend-tgtd.onrender.com/api/v1/grooming', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const grData = await grRes.json();

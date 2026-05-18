@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import axios from 'axios';
 import { X, ExternalLink, Activity, Calendar, User, Phone, Mail, Award, Clock } from 'lucide-react';
 
-const API = 'https://vet-clinic-1j57.onrender.com/api/v1';
+const API = 'https://vet-clinic-backend-tgtd.onrender.com/api/v1';
 
 // --- Shared Modal Container ---
 const QuickViewModal = ({ title, isOpen, onClose, children, onFullView, fullViewLabel }) => {

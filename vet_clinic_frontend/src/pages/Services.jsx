@@ -34,7 +34,7 @@ const Services = () => {
     const fetchServices = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.get('https://vet-clinic-1j57.onrender.com/api/v1/services', {
+            const res = await axios.get('https://vet-clinic-backend-tgtd.onrender.com/api/v1/services', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -99,8 +99,8 @@ const Services = () => {
         try {
             const token = sessionStorage.getItem('token');
             const url = editingId
-                ? `https://vet-clinic-1j57.onrender.com/api/v1/services/${editingId}`
-                : 'https://vet-clinic-1j57.onrender.com/api/v1/services';
+                ? `https://vet-clinic-backend-tgtd.onrender.com/api/v1/services/${editingId}`
+                : 'https://vet-clinic-backend-tgtd.onrender.com/api/v1/services';
             const method = editingId ? 'put' : 'post';
 
             const res = await axios[method](url, {
@@ -128,7 +128,7 @@ const Services = () => {
     const handleDelete = async (id) => {
         try {
             const token = sessionStorage.getItem('token');
-            const checkRes = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/services/${id}/check-delete`, {
+            const checkRes = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/services/${id}/check-delete`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -138,7 +138,7 @@ const Services = () => {
                     'Dịch vụ này đã có dữ liệu sử dụng trên hệ thống (Lịch hẹn, Hóa đơn...).\n\nBạn có muốn NGỪNG CUNG CẤP dịch vụ này không? Dịch vụ sẽ bị ẩn khỏi bảng giá mới nhưng mọi lịch sử vẫn được bảo toàn.',
                     async () => {
                         try {
-                            await axios.delete(`https://vet-clinic-1j57.onrender.com/api/v1/services/${id}`, {
+                            await axios.delete(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/services/${id}`, {
                                 headers: { Authorization: `Bearer ${token}` }
                             });
                             showToast('Đã ngừng cung cấp dịch vụ.', 'success');
@@ -154,7 +154,7 @@ const Services = () => {
                     'Dịch vụ này chưa từng được sử dụng trong hệ thống.\n\nBạn có chắc chắn muốn XÓA VĨNH VIỄN không?',
                     async () => {
                         try {
-                            await axios.delete(`https://vet-clinic-1j57.onrender.com/api/v1/services/${id}?force=true`, {
+                            await axios.delete(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/services/${id}?force=true`, {
                                 headers: { Authorization: `Bearer ${token}` }
                             });
                             showToast('Đã xóa vĩnh viễn dịch vụ.', 'success');

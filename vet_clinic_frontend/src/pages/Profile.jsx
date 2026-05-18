@@ -481,7 +481,7 @@ const Profile = () => {
             let staffList = [];
             try {
                 const token = sessionStorage.getItem('token');
-                const res = await fetch('https://vet-clinic-1j57.onrender.com/api/v1/users/me/other-face-photos', { headers: { Authorization: `Bearer ${token}` } });
+                const res = await fetch('https://vet-clinic-backend-tgtd.onrender.com/api/v1/users/me/other-face-photos', { headers: { Authorization: `Bearer ${token}` } });
                 const data = await res.json();
                 staffList = data.data || [];
             } catch (err) {
@@ -599,7 +599,7 @@ const Profile = () => {
             let staffList = [];
             try {
                 const token = sessionStorage.getItem('token');
-                const res = await fetch('https://vet-clinic-1j57.onrender.com/api/v1/users/me/other-face-photos', { headers: { Authorization: `Bearer ${token}` } });
+                const res = await fetch('https://vet-clinic-backend-tgtd.onrender.com/api/v1/users/me/other-face-photos', { headers: { Authorization: `Bearer ${token}` } });
                 const data = await res.json();
                 staffList = data.data || [];
             } catch (err) {

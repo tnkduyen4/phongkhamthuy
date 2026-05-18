@@ -28,8 +28,8 @@ import {
     Clipboard
 } from "lucide-react";
 
-const API = 'https://vet-clinic-1j57.onrender.com/api/v1';
-const RECORDS_API = 'https://vet-clinic-1j57.onrender.com/api/v1/records';
+const API = 'https://vet-clinic-backend-tgtd.onrender.com/api/v1';
+const RECORDS_API = 'https://vet-clinic-backend-tgtd.onrender.com/api/v1/records';
 
 // Debounce hook
 const useDebounce = (value, delay) => {
@@ -293,7 +293,7 @@ const MedicalRecords = () => {
             return;
         }
         const token = sessionStorage.getItem('token');
-        axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/users?role=CUSTOMER&search=${debouncedPhoneSearch}`, {
+        axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/users?role=CUSTOMER&search=${debouncedPhoneSearch}`, {
             headers: { Authorization: `Bearer ${token}` }
         }).then(r => {
             setCustomerPhoneSuggestions(r.data.data.slice(0, 50));

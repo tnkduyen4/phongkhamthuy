@@ -213,20 +213,20 @@ const Invoices = () => {
         try {
             if (type === 'APPOINTMENT') {
                 // 1. Fetch bệnh án
-                const r = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/records?appointmentId=${item._id}`, authHeader);
+                const r = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/records?appointmentId=${item._id}`, authHeader);
                 const records = r.data.data || [];
                 if (records.length > 0) {
                     const record = records[0];
                     setCheckoutRecord(record);
                     // 2. Fetch đơn Grooming đi kèm bệnh án này (nếu có)
-                    const grRes = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/grooming?medicalRecordId=${record._id}`, authHeader);
+                    const grRes = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/grooming?medicalRecordId=${record._id}`, authHeader);
                     if (grRes.data.success && grRes.data.data.length > 0) {
                         normalizedItem._linkedGrooming = grRes.data.data[0];
                     }
                 }
 
                 // 3. Fetch đơn Tiêm phòng đi kèm lịch hẹn này (nếu có)
-                const vacRes = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/vaccinations?appointmentId=${item._id}`, authHeader);
+                const vacRes = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/vaccinations?appointmentId=${item._id}`, authHeader);
                 if (vacRes.data.success && vacRes.data.data.length > 0) {
                     normalizedItem._linkedVaccination = vacRes.data.data[0];
                 }
@@ -234,7 +234,7 @@ const Invoices = () => {
                 // Fetch bệnh án đi kèm đơn Grooming (nếu có)
                 if (item.medicalRecordId) {
                     const recId = item.medicalRecordId._id || item.medicalRecordId;
-                    const r = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/records?_id=${recId}`, authHeader);
+                    const r = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/records?_id=${recId}`, authHeader);
                     if (r.data.success && r.data.data.length > 0) setCheckoutRecord(r.data.data[0]);
                 }
             }
@@ -254,7 +254,7 @@ const Invoices = () => {
         const recId = enriched.medicalRecordId?._id || enriched.medicalRecordId;
         if (recId && recId !== 'undefined' && recId !== 'null' && (typeof enriched.medicalRecordId === 'string' || !enriched.medicalRecordId.prescriptions)) {
             try {
-                const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/records?_id=${recId}`, authHeader);
+                const res = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/records?_id=${recId}`, authHeader);
                 if (res.data.success && res.data.data.length > 0) enriched.medicalRecordId = res.data.data[0];
             } catch (e) { console.error("Error enrichment Record:", e); }
         } else if (!enriched.medicalRecordId && enriched.appointmentId) {
@@ -262,7 +262,7 @@ const Invoices = () => {
             try {
                 const aptId = enriched.appointmentId._id || enriched.appointmentId;
                 if (aptId && aptId !== 'undefined' && aptId !== 'null') {
-                    const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/records?appointmentId=${aptId}`, authHeader);
+                    const res = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/records?appointmentId=${aptId}`, authHeader);
                     if (res.data.success && res.data.data.length > 0) enriched.medicalRecordId = res.data.data[0];
                 }
             } catch (e) { }
@@ -272,7 +272,7 @@ const Invoices = () => {
         const gId = enriched.groomingOrderId?._id || enriched.groomingOrderId;
         if (gId && gId !== 'undefined' && gId !== 'null' && (typeof enriched.groomingOrderId === 'string' || !enriched.groomingOrderId.services)) {
             try {
-                const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/grooming?_id=${gId}`, authHeader);
+                const res = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/grooming?_id=${gId}`, authHeader);
                 if (res.data.success && res.data.data.length > 0) enriched.groomingOrderId = res.data.data[0];
             } catch (e) { console.error("Error enrichment Grooming:", e); }
         } else if (!enriched.groomingOrderId && enriched.medicalRecordId) {
@@ -280,7 +280,7 @@ const Invoices = () => {
             try {
                 const mId = enriched.medicalRecordId._id || enriched.medicalRecordId;
                 if (mId && mId !== 'undefined' && mId !== 'null') {
-                    const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/grooming?medicalRecordId=${mId}`, authHeader);
+                    const res = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/grooming?medicalRecordId=${mId}`, authHeader);
                     if (res.data.success && res.data.data.length > 0) enriched.groomingOrderId = res.data.data[0];
                 }
             } catch (e) { }
@@ -290,7 +290,7 @@ const Invoices = () => {
         const vId = enriched.vaccinationId?._id || enriched.vaccinationId;
         if (vId && (typeof enriched.vaccinationId === 'string' || !enriched.vaccinationId.medicineId)) {
             try {
-                const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/vaccinations?_id=${vId}`, authHeader);
+                const res = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/vaccinations?_id=${vId}`, authHeader);
                 if (res.data.success && res.data.data.length > 0) enriched.vaccinationId = res.data.data[0];
             } catch (e) { console.error("Error enrichment Vac:", e); }
         }
@@ -427,7 +427,7 @@ const Invoices = () => {
         setSubmitLoading(true);
         setErrorMsg('');
         try {
-            const res = await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/invoices', payload, {
+            const res = await axios.post('https://vet-clinic-backend-tgtd.onrender.com/api/v1/invoices', payload, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {

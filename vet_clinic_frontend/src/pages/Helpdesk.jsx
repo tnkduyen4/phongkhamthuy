@@ -8,7 +8,7 @@ import { Search, Filter, Headset, CheckCircle2, Clock, XCircle, ChevronRight, Fi
 import Layout from '../components/Layout';
 import '../styles/Helpdesk.css';
 
-const API = 'https://vet-clinic-1j57.onrender.com/api/v1';
+const API = 'https://vet-clinic-backend-tgtd.onrender.com/api/v1';
 
 export default function Helpdesk() {
     const { user } = useAuth();

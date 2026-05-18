@@ -74,7 +74,7 @@ const Inventory = () => {
     const fetchInventory = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.get('https://vet-clinic-1j57.onrender.com/api/v1/inventory/medicines', {
+            const res = await axios.get('https://vet-clinic-backend-tgtd.onrender.com/api/v1/inventory/medicines', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -90,7 +90,7 @@ const Inventory = () => {
     const fetchProducts = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.get('https://vet-clinic-1j57.onrender.com/api/v1/products', {
+            const res = await axios.get('https://vet-clinic-backend-tgtd.onrender.com/api/v1/products', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -108,7 +108,7 @@ const Inventory = () => {
         setIsTransactionModalOpen(true);
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/inventory/transactions?medicineId=${medicine._id}`, {
+            const res = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/inventory/transactions?medicineId=${medicine._id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -217,7 +217,7 @@ const Inventory = () => {
         setSubmitLoading(true);
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/inventory/medicines/bulk', { medicines: previewData }, {
+            const res = await axios.post('https://vet-clinic-backend-tgtd.onrender.com/api/v1/inventory/medicines/bulk', { medicines: previewData }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -269,7 +269,7 @@ const Inventory = () => {
 
         try {
             const token = sessionStorage.getItem('token');
-            const url = editingId ? `https://vet-clinic-1j57.onrender.com/api/v1/inventory/medicines/${editingId}` : 'https://vet-clinic-1j57.onrender.com/api/v1/inventory/medicines';
+            const url = editingId ? `https://vet-clinic-backend-tgtd.onrender.com/api/v1/inventory/medicines/${editingId}` : 'https://vet-clinic-backend-tgtd.onrender.com/api/v1/inventory/medicines';
             const method = editingId ? 'put' : 'post';
 
             const res = await axios[method](url, formData, {
@@ -295,7 +295,7 @@ const Inventory = () => {
         setErrorMsg('');
         try {
             const token = sessionStorage.getItem('token');
-            const url = editingProductId ? `https://vet-clinic-1j57.onrender.com/api/v1/products/${editingProductId}` : 'https://vet-clinic-1j57.onrender.com/api/v1/products';
+            const url = editingProductId ? `https://vet-clinic-backend-tgtd.onrender.com/api/v1/products/${editingProductId}` : 'https://vet-clinic-backend-tgtd.onrender.com/api/v1/products';
             const method = editingProductId ? 'put' : 'post';
             const res = await axios[method](url, productFormData, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -331,7 +331,7 @@ const Inventory = () => {
             async () => {
                 try {
                     const token = sessionStorage.getItem('token');
-                    const res = await axios.delete(`https://vet-clinic-1j57.onrender.com/api/v1/products/${id}`, {
+                    const res = await axios.delete(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/products/${id}`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     if (res.data.success) {
@@ -369,7 +369,7 @@ const Inventory = () => {
             const targetMedicine = inventory.find(i => i._id === id);
             const medName = targetMedicine ? targetMedicine.name : 'Sản phẩm này';
 
-            const checkRes = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/inventory/medicines/${id}/check-delete`, {
+            const checkRes = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/inventory/medicines/${id}/check-delete`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             
@@ -379,7 +379,7 @@ const Inventory = () => {
                     `Sản phẩm "${medName}" đã có dữ liệu sử dụng trên bệnh án/hóa đơn.\n\nBạn có muốn NGỪNG KINH DOANH sản phẩm này không? Sản phẩm sẽ bị ẩn khỏi danh sách nhưng mọi lịch sử vẫn được bảo toàn.`,
                     async () => {
                         try {
-                            const res = await axios.delete(`https://vet-clinic-1j57.onrender.com/api/v1/inventory/medicines/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+                            const res = await axios.delete(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/inventory/medicines/${id}`, { headers: { Authorization: `Bearer ${token}` } });
                             if (res.data.success) {
                                 setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
                                 showToast('Đã ngừng kinh doanh sản phẩm', 'success');
@@ -394,7 +394,7 @@ const Inventory = () => {
                     `Sản phẩm "${medName}" chưa từng được sử dụng.\n\nBạn có chắc chắn muốn XÓA VĨNH VIỄN không? Dữ liệu không thể khôi phục.`,
                     async () => {
                         try {
-                            const res = await axios.delete(`https://vet-clinic-1j57.onrender.com/api/v1/inventory/medicines/${id}?force=true`, { headers: { Authorization: `Bearer ${token}` } });
+                            const res = await axios.delete(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/inventory/medicines/${id}?force=true`, { headers: { Authorization: `Bearer ${token}` } });
                             if (res.data.success) {
                                 setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
                                 showToast('Đã xóa vĩnh viễn sản phẩm', 'success');
@@ -418,7 +418,7 @@ const Inventory = () => {
                 try {
                     setLoading(true);
                     const token = sessionStorage.getItem('token');
-                    const res = await axios.post(`https://vet-clinic-1j57.onrender.com/api/v1/inventory/medicines/bulk-delete`, { ids: selectedIds }, {
+                    const res = await axios.post(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/inventory/medicines/bulk-delete`, { ids: selectedIds }, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     if (res.data.success) {

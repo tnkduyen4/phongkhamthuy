@@ -44,7 +44,7 @@ const Pets = () => {
         try {
             setLoading(true);
             const token = sessionStorage.getItem('token');
-            const url = `https://vet-clinic-1j57.onrender.com/api/v1/pets${showArchived ? '?includeInactive=true' : ''}`;
+            const url = `https://vet-clinic-backend-tgtd.onrender.com/api/v1/pets${showArchived ? '?includeInactive=true' : ''}`;
             const res = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
             if (res.data.success) {
                 setPets(showArchived ? res.data.data.filter(p => p.isActive === false) : res.data.data);
@@ -56,7 +56,7 @@ const Pets = () => {
     const fetchCustomers = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.get('https://vet-clinic-1j57.onrender.com/api/v1/users?role=CUSTOMER', { headers: { Authorization: `Bearer ${token}` } });
+            const res = await axios.get('https://vet-clinic-backend-tgtd.onrender.com/api/v1/users?role=CUSTOMER', { headers: { Authorization: `Bearer ${token}` } });
             if (res.data.success) setCustomers(res.data.data);
         } catch (error) { console.error(error); }
     };
@@ -68,7 +68,7 @@ const Pets = () => {
             setSelectedPet(pet);
             setIsHistoryModalOpen(true);
             const token = sessionStorage.getItem('token');
-            const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/records/pet/${pet._id}`, { headers: { Authorization: `Bearer ${token}` } });
+            const res = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/records/pet/${pet._id}`, { headers: { Authorization: `Bearer ${token}` } });
             if (res.data.success) setMedicalHistory(res.data.data);
         } catch (error) { console.error(error); } finally { setHistoryLoading(false); }
     };
@@ -78,7 +78,7 @@ const Pets = () => {
         const params = new URLSearchParams(window.location.search);
         const urlId = params.get('id');
         if (urlId) {
-            axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/pets/${urlId}`, { headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } })
+            axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/pets/${urlId}`, { headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } })
                 .then(res => { if (res.data.success) fetchMedicalHistory(res.data.data); });
         }
     }, [showArchived]);
@@ -86,7 +86,7 @@ const Pets = () => {
     const handleDeletePet = async (petId, petName) => {
         try {
             const token = sessionStorage.getItem('token');
-            const checkRes = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/pets/${petId}/check-delete`, {
+            const checkRes = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/pets/${petId}/check-delete`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const hasRelations = checkRes.data.hasRelations;
@@ -97,7 +97,7 @@ const Pets = () => {
                     `Thú cưng "${petName}" đang có các dữ liệu liên quan (Lịch hẹn, Bệnh án...). Hệ thống không thể xóa vĩnh viễn để bảo toàn dữ liệu.\n\nBạn có muốn NGƯNG HOẠT ĐỘNG (Lưu trữ) thú cưng này không?`,
                     async () => {
                         try {
-                            await axios.delete(`https://vet-clinic-1j57.onrender.com/api/v1/pets/${petId}`, { headers: { Authorization: `Bearer ${token}` } });
+                            await axios.delete(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/pets/${petId}`, { headers: { Authorization: `Bearer ${token}` } });
                             showToast('Đã ngưng hoạt động thú cưng.', 'success');
                             fetchPets();
                         } catch (error) { showToast('Lỗi khi lưu trữ thú cưng', 'error'); }
@@ -109,7 +109,7 @@ const Pets = () => {
                     `Thú cưng "${petName}" là dữ liệu rỗng, không có liên kết nào.\n\nBạn có chắc chắn muốn XÓA VĨNH VIỄN thú cưng này không? Dữ liệu không thể khôi phục.`,
                     async () => {
                         try {
-                            await axios.delete(`https://vet-clinic-1j57.onrender.com/api/v1/pets/${petId}?force=true`, { headers: { Authorization: `Bearer ${token}` } });
+                            await axios.delete(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/pets/${petId}?force=true`, { headers: { Authorization: `Bearer ${token}` } });
                             showToast('Đã xóa vĩnh viễn thú cưng!', 'success');
                             fetchPets();
                         } catch (error) { showToast('Lỗi khi xóa vĩnh viễn', 'error'); }
@@ -130,7 +130,7 @@ const Pets = () => {
                 setSubmitLoading(true);
                 try {
                     const token = sessionStorage.getItem('token');
-                    const res = await axios.post(`https://vet-clinic-1j57.onrender.com/api/v1/pets/bulk-delete`, { petIds: selectedPetIds }, { headers: { Authorization: `Bearer ${token}` } });
+                    const res = await axios.post(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/pets/bulk-delete`, { petIds: selectedPetIds }, { headers: { Authorization: `Bearer ${token}` } });
                     if (res.data.success) {
                         showToast(res.data.message, 'success');
                         fetchPets();
@@ -150,7 +150,7 @@ const Pets = () => {
             'Khôi phục hoạt động cho thú cưng này?',
             async () => {
                 try {
-                    await axios.patch(`https://vet-clinic-1j57.onrender.com/api/v1/pets/${petId}/reactivate`, {}, { headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } });
+                    await axios.patch(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/pets/${petId}/reactivate`, {}, { headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } });
                     showToast('Đã khôi phục thú cưng thành công!');
                     fetchPets();
                 } catch (error) { showToast('Lỗi khôi phục', 'error'); }
@@ -186,10 +186,10 @@ const Pets = () => {
                 try {
                     let oid = formData.ownerId;
                     if (isNewCustomer) {
-                        const res = await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/auth/register', { fullName: customerName, phoneNumber: customerPhone, password: '123456' });
+                        const res = await axios.post('https://vet-clinic-backend-tgtd.onrender.com/api/v1/auth/register', { fullName: customerName, phoneNumber: customerPhone, password: '123456' });
                         oid = res.data.data._id;
                     }
-                    await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/pets', { ...formData, ownerId: oid }, { headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } });
+                    await axios.post('https://vet-clinic-backend-tgtd.onrender.com/api/v1/pets', { ...formData, ownerId: oid }, { headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } });
                     showToast('Tiếp nhận thú cưng thành công!', 'success');
                     setIsModalOpen(false);
                     fetchPets();

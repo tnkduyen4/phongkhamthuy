@@ -37,7 +37,7 @@ const ChatWidget = () => {
 
     const fetchHistory = async () => {
         try {
-            const res = await axios.get(`${import.meta.env.VITE_API_URL || 'https://vet-clinic-1j57.onrender.com'}/api/v1/chat/history?sessionId=${sessionId}`);
+            const res = await axios.get(`${import.meta.env.VITE_API_URL || 'https://vet-clinic-backend-tgtd.onrender.com'}/api/v1/chat/history?sessionId=${sessionId}`);
             if (res.data && Array.isArray(res.data)) {
                 setMessages(res.data);
             }
@@ -59,7 +59,7 @@ const ChatWidget = () => {
             const token = sessionStorage.getItem('token');
             const headers = token ? { Authorization: `Bearer ${token}` } : {};
             
-            const res = await axios.post(`${import.meta.env.VITE_API_URL || 'https://vet-clinic-1j57.onrender.com'}/api/v1/chat/send`, {
+            const res = await axios.post(`${import.meta.env.VITE_API_URL || 'https://vet-clinic-backend-tgtd.onrender.com'}/api/v1/chat/send`, {
                 sessionId,
                 message: userMsg.content
             }, { headers });

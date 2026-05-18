@@ -16,7 +16,7 @@ import {
     History, Activity, ArrowRight, ArrowLeft, Save, RefreshCw, Printer, ScanFace, Loader2, Eye, EyeOff, Lock
 } from 'lucide-react';
 
-const API = 'https://vet-clinic-1j57.onrender.com/api/v1';
+const API = 'https://vet-clinic-backend-tgtd.onrender.com/api/v1';
 const getToken = () => sessionStorage.getItem('token');
 const authHeader = () => ({ Authorization: `Bearer ${getToken()}` });
 
@@ -333,7 +333,7 @@ const Staff = () => {
     // ─────────────────────────────────────────────────────
     const fetchStaffList = async () => {
         try {
-            const res = await axios.get('https://vet-clinic-1j57.onrender.com/api/v1/users?includeInactive=true&includePhotos=true', { headers: authHeader() });
+            const res = await axios.get('https://vet-clinic-backend-tgtd.onrender.com/api/v1/users?includeInactive=true&includePhotos=true', { headers: authHeader() });
             if (res.data.success) {
                 setStaffList(res.data.data.filter(u => u.role !== 'CUSTOMER'));
                 setSelectedStaffIds([]);
@@ -363,7 +363,7 @@ const Staff = () => {
                 }),
                 axios.get(`${API}/hrm/leaves`, { headers: authHeader() }),
                 // Lấy dữ liệu chấm công cho cùng khoảng ngày
-                axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/attendance/all`, {
+                axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/attendance/all`, {
                     params: { startDate: extStart.toISOString().split('T')[0], endDate: extEnd.toISOString().split('T')[0] },
                     headers: authHeader()
                 }).catch(() => ({ data: { success: false } })) // không block nếu attendance lỗi
@@ -486,7 +486,7 @@ const Staff = () => {
             if (activeTab === 'schedules') {
                 await fetchScheduleData(false);
             } else if (activeTab === 'leaves') {
-                const leaveRes = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/hrm/leaves`, { headers: authHeader() });
+                const leaveRes = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/hrm/leaves`, { headers: authHeader() });
                 if (leaveRes.data.success) setLeaves(leaveRes.data.data);
             } else if (activeTab === 'payroll') {
                 await fetchPayrollData(payrollMonth, payrollYear);
@@ -1014,7 +1014,7 @@ const Staff = () => {
 
     const updateLeaveStatus = async (id, status) => {
         try {
-            await axios.put(`https://vet-clinic-1j57.onrender.com/api/v1/hrm/leaves/${id}`, { status }, { headers: authHeader() });
+            await axios.put(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/hrm/leaves/${id}`, { status }, { headers: authHeader() });
             fetchData();
             showToast(`Đã ${status === 'APPROVED' ? 'phê duyệt' : 'từ chối'} đơn nghỉ`);
         } catch (error) { showToast('Lỗi phê duyệt', 'error'); }

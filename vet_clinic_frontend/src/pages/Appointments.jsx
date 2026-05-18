@@ -80,7 +80,7 @@ const Appointments = () => {
     const fetchAppointments = async (filters = filterState) => {
         try {
             const token = sessionStorage.getItem('token');
-            let url = 'https://vet-clinic-1j57.onrender.com/api/v1/appointments';
+            let url = 'https://vet-clinic-backend-tgtd.onrender.com/api/v1/appointments';
             const params = new URLSearchParams();
             if (filters.status) params.append('status', filters.status);
             if (filters.type) params.append('type', filters.type);
@@ -140,7 +140,7 @@ const Appointments = () => {
     const fetchCustomers = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.get('https://vet-clinic-1j57.onrender.com/api/v1/users?role=CUSTOMER', {
+            const res = await axios.get('https://vet-clinic-backend-tgtd.onrender.com/api/v1/users?role=CUSTOMER', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -154,7 +154,7 @@ const Appointments = () => {
     const fetchStaff = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.get('https://vet-clinic-1j57.onrender.com/api/v1/users', {
+            const res = await axios.get('https://vet-clinic-backend-tgtd.onrender.com/api/v1/users', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -171,7 +171,7 @@ const Appointments = () => {
         try {
             const token = sessionStorage.getItem('token');
             const today = new Date().toISOString().split('T')[0];
-            let url = `https://vet-clinic-1j57.onrender.com/api/v1/hrm/schedules?date=${today}&isOnCall=true`;
+            let url = `https://vet-clinic-backend-tgtd.onrender.com/api/v1/hrm/schedules?date=${today}&isOnCall=true`;
             // Lọc theo chi nhánh của người dùng hiện tại
             const res = await axios.get(url, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -191,7 +191,7 @@ const Appointments = () => {
             const token = sessionStorage.getItem('token');
             // Lấy ngày hôm nay theo VN (YYYY-MM-DD)
             const todayVN = new Date(Date.now() + 7 * 60 * 60 * 1000).toISOString().split('T')[0];
-            const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/hrm/duty-staff?date=${todayVN}`, {
+            const res = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/hrm/duty-staff?date=${todayVN}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -242,7 +242,7 @@ const Appointments = () => {
         if (!isModalOpen) return;
         if (debouncedPhone.length < 2) { setPhoneSuggestions([]); setShowPhoneDrop(false); return; }
         const token = sessionStorage.getItem('token');
-        axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/users?role=CUSTOMER&search=${debouncedPhone}`, {
+        axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/users?role=CUSTOMER&search=${debouncedPhone}`, {
             headers: { Authorization: `Bearer ${token}` }
         }).then(r => {
             setPhoneSuggestions((r.data.data || []).slice(0, 8));
@@ -260,7 +260,7 @@ const Appointments = () => {
         setCustomerPets([]);
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/pets?ownerId=${c._id}`, {
+            const res = await axios.get(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/pets?ownerId=${c._id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -368,14 +368,14 @@ const Appointments = () => {
             try {
                 const token = sessionStorage.getItem('token');
                 // 1. Tạo khách mới
-                const r = await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/users/quick-customer',
+                const r = await axios.post('https://vet-clinic-backend-tgtd.onrender.com/api/v1/users/quick-customer',
                     { fullName: newCustomerName.trim(), phoneNumber: phoneInput.trim() },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 resolvedCustomerId = r.data.data._id;
 
                 // 2. Tạo thú cưng mới cho khách này
-                const petR = await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/pets',
+                const petR = await axios.post('https://vet-clinic-backend-tgtd.onrender.com/api/v1/pets',
                     {
                         name: newPetName.trim(),
                         ownerId: resolvedCustomerId,
@@ -402,7 +402,7 @@ const Appointments = () => {
         try {
             const token = sessionStorage.getItem('token');
             const payload = { ...formData, customerId: resolvedCustomerId, petId: resolvedPetId };
-            const res = await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/appointments', payload, {
+            const res = await axios.post('https://vet-clinic-backend-tgtd.onrender.com/api/v1/appointments', payload, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -423,7 +423,7 @@ const Appointments = () => {
     const handleStatusOrStaffUpdate = async (appointmentId, updateData) => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.patch(`https://vet-clinic-1j57.onrender.com/api/v1/appointments/${appointmentId}/status`,
+            const res = await axios.patch(`https://vet-clinic-backend-tgtd.onrender.com/api/v1/appointments/${appointmentId}/status`,
                 updateData,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -508,7 +508,7 @@ const Appointments = () => {
         try {
             const token = sessionStorage.getItem('token');
             const res = await axios.patch(
-                `https://vet-clinic-1j57.onrender.com/api/v1/appointments/${rescheduleForm.aptId}/reschedule`,
+                `https://vet-clinic-backend-tgtd.onrender.com/api/v1/appointments/${rescheduleForm.aptId}/reschedule`,
                 { date: rescheduleForm.date, timeSlot: rescheduleForm.timeSlot, note: rescheduleForm.note },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
