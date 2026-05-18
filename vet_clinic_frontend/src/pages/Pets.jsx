@@ -44,7 +44,7 @@ const Pets = () => {
         try {
             setLoading(true);
             const token = sessionStorage.getItem('token');
-            const url = `http://localhost:5000/api/v1/pets${showArchived ? '?includeInactive=true' : ''}`;
+            const url = `https://vet-clinic-1j57.onrender.com/api/v1/pets${showArchived ? '?includeInactive=true' : ''}`;
             const res = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
             if (res.data.success) {
                 setPets(showArchived ? res.data.data.filter(p => p.isActive === false) : res.data.data);
@@ -56,7 +56,7 @@ const Pets = () => {
     const fetchCustomers = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.get('http://localhost:5000/api/v1/users?role=CUSTOMER', { headers: { Authorization: `Bearer ${token}` } });
+            const res = await axios.get('https://vet-clinic-1j57.onrender.com/api/v1/users?role=CUSTOMER', { headers: { Authorization: `Bearer ${token}` } });
             if (res.data.success) setCustomers(res.data.data);
         } catch (error) { console.error(error); }
     };
@@ -68,7 +68,7 @@ const Pets = () => {
             setSelectedPet(pet);
             setIsHistoryModalOpen(true);
             const token = sessionStorage.getItem('token');
-            const res = await axios.get(`http://localhost:5000/api/v1/records/pet/${pet._id}`, { headers: { Authorization: `Bearer ${token}` } });
+            const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/records/pet/${pet._id}`, { headers: { Authorization: `Bearer ${token}` } });
             if (res.data.success) setMedicalHistory(res.data.data);
         } catch (error) { console.error(error); } finally { setHistoryLoading(false); }
     };
@@ -78,7 +78,7 @@ const Pets = () => {
         const params = new URLSearchParams(window.location.search);
         const urlId = params.get('id');
         if (urlId) {
-            axios.get(`http://localhost:5000/api/v1/pets/${urlId}`, { headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } })
+            axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/pets/${urlId}`, { headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } })
                 .then(res => { if (res.data.success) fetchMedicalHistory(res.data.data); });
         }
     }, [showArchived]);
@@ -86,7 +86,7 @@ const Pets = () => {
     const handleDeletePet = async (petId, petName) => {
         try {
             const token = sessionStorage.getItem('token');
-            const checkRes = await axios.get(`http://localhost:5000/api/v1/pets/${petId}/check-delete`, {
+            const checkRes = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/pets/${petId}/check-delete`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const hasRelations = checkRes.data.hasRelations;
@@ -97,7 +97,7 @@ const Pets = () => {
                     `Thú cưng "${petName}" đang có các dữ liệu liên quan (Lịch hẹn, Bệnh án...). Hệ thống không thể xóa vĩnh viễn để bảo toàn dữ liệu.\n\nBạn có muốn NGƯNG HOẠT ĐỘNG (Lưu trữ) thú cưng này không?`,
                     async () => {
                         try {
-                            await axios.delete(`http://localhost:5000/api/v1/pets/${petId}`, { headers: { Authorization: `Bearer ${token}` } });
+                            await axios.delete(`https://vet-clinic-1j57.onrender.com/api/v1/pets/${petId}`, { headers: { Authorization: `Bearer ${token}` } });
                             showToast('Đã ngưng hoạt động thú cưng.', 'success');
                             fetchPets();
                         } catch (error) { showToast('Lỗi khi lưu trữ thú cưng', 'error'); }
@@ -109,7 +109,7 @@ const Pets = () => {
                     `Thú cưng "${petName}" là dữ liệu rỗng, không có liên kết nào.\n\nBạn có chắc chắn muốn XÓA VĨNH VIỄN thú cưng này không? Dữ liệu không thể khôi phục.`,
                     async () => {
                         try {
-                            await axios.delete(`http://localhost:5000/api/v1/pets/${petId}?force=true`, { headers: { Authorization: `Bearer ${token}` } });
+                            await axios.delete(`https://vet-clinic-1j57.onrender.com/api/v1/pets/${petId}?force=true`, { headers: { Authorization: `Bearer ${token}` } });
                             showToast('Đã xóa vĩnh viễn thú cưng!', 'success');
                             fetchPets();
                         } catch (error) { showToast('Lỗi khi xóa vĩnh viễn', 'error'); }
@@ -130,7 +130,7 @@ const Pets = () => {
                 setSubmitLoading(true);
                 try {
                     const token = sessionStorage.getItem('token');
-                    const res = await axios.post(`http://localhost:5000/api/v1/pets/bulk-delete`, { petIds: selectedPetIds }, { headers: { Authorization: `Bearer ${token}` } });
+                    const res = await axios.post(`https://vet-clinic-1j57.onrender.com/api/v1/pets/bulk-delete`, { petIds: selectedPetIds }, { headers: { Authorization: `Bearer ${token}` } });
                     if (res.data.success) {
                         showToast(res.data.message, 'success');
                         fetchPets();
@@ -150,7 +150,7 @@ const Pets = () => {
             'Khôi phục hoạt động cho thú cưng này?',
             async () => {
                 try {
-                    await axios.patch(`http://localhost:5000/api/v1/pets/${petId}/reactivate`, {}, { headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } });
+                    await axios.patch(`https://vet-clinic-1j57.onrender.com/api/v1/pets/${petId}/reactivate`, {}, { headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } });
                     showToast('Đã khôi phục thú cưng thành công!');
                     fetchPets();
                 } catch (error) { showToast('Lỗi khôi phục', 'error'); }
@@ -186,18 +186,18 @@ const Pets = () => {
                 try {
                     let oid = formData.ownerId;
                     if (isNewCustomer) {
-                        const res = await axios.post('http://localhost:5000/api/v1/auth/register', { fullName: customerName, phoneNumber: customerPhone, password: '123456' });
+                        const res = await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/auth/register', { fullName: customerName, phoneNumber: customerPhone, password: '123456' });
                         oid = res.data.data._id;
                     }
-                    await axios.post('http://localhost:5000/api/v1/pets', { ...formData, ownerId: oid }, { headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } });
+                    await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/pets', { ...formData, ownerId: oid }, { headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } });
                     showToast('Tiếp nhận thú cưng thành công!', 'success');
-                    setIsModalOpen(false); 
+                    setIsModalOpen(false);
                     fetchPets();
-                } catch (error) { 
-                    setErrorMsg("Lỗi khi lưu: " + (error.response?.data?.message || "Hệ thống")); 
+                } catch (error) {
+                    setErrorMsg("Lỗi khi lưu: " + (error.response?.data?.message || "Hệ thống"));
                     showToast('Lỗi khi tiếp nhận', 'error');
-                } finally { 
-                    setSubmitLoading(false); 
+                } finally {
+                    setSubmitLoading(false);
                 }
             }
         );
@@ -291,7 +291,7 @@ const Pets = () => {
         const oid = p.ownerId?._id || 'none';
         if (!acc[oid]) acc[oid] = { owner: p.ownerId || { fullName: 'Vô chủ' }, pets: [] };
         acc[oid].pets.push(p); return acc;
-    }, {})).sort((a,b) => (a.owner.fullName || '').localeCompare(b.owner.fullName || ''));
+    }, {})).sort((a, b) => (a.owner.fullName || '').localeCompare(b.owner.fullName || ''));
 
     // --- Sub-Component: PetCard ---
     const PetCard = ({ pet }) => (
@@ -326,7 +326,7 @@ const Pets = () => {
                 <div className="flex-between" style={{ alignItems: 'flex-start', fontSize: '0.85rem' }}>
                     <span style={{ color: 'var(--text-muted)' }}>Chủ nuôi:</span>
                     <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontWeight: 800, color: 'var(--primary)', cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); if(pet.ownerId?._id) { setQuickViewCustomerId(pet.ownerId._id); setIsQuickViewOpen(true); } }}>
+                        <div style={{ fontWeight: 800, color: 'var(--primary)', cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); if (pet.ownerId?._id) { setQuickViewCustomerId(pet.ownerId._id); setIsQuickViewOpen(true); } }}>
                             {pet.ownerId?.fullName}
                         </div>
                         <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{pet.ownerId?.phoneNumber}</div>
@@ -394,7 +394,7 @@ const Pets = () => {
 
             {showArchived && (
                 <div className="animate-fade-in" style={{ padding: '16px 20px', background: '#fef2f2', border: '1px dashed #fca5a5', borderRadius: '16px', color: '#b91c1c', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px', fontWeight: 600 }}>
-                    <Trash2 size={24} /> 
+                    <Trash2 size={24} />
                     <div>
                         <div style={{ fontSize: '1.05rem', marginBottom: '4px' }}>ĐANG XEM THÙNG RÁC</div>
                         <div style={{ fontSize: '0.85rem', fontWeight: 400 }}>Danh sách dưới đây chỉ hiển thị các hồ sơ thú cưng đã bị xóa.</div>
@@ -407,8 +407,8 @@ const Pets = () => {
                     <div className="flex-center" style={{ height: '200px', color: 'var(--text-muted)' }}>Đang tải dữ liệu...</div>
                 ) : filteredPets.length === 0 ? (
                     <div className="glass-card flex-center" style={{ minHeight: '300px', flexDirection: 'column', gap: '16px' }}>
-                         <PawPrint size={48} color="#e2e8f0" />
-                         <p style={{ color: 'var(--text-muted)' }}>Không tìm thấy thú cưng nào phù hợp.</p>
+                        <PawPrint size={48} color="#e2e8f0" />
+                        <p style={{ color: 'var(--text-muted)' }}>Không tìm thấy thú cưng nào phù hợp.</p>
                     </div>
                 ) : viewMode === 'pet' ? (
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
@@ -421,7 +421,7 @@ const Pets = () => {
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', padding: '12px 20px', background: 'var(--primary-glow)', borderRadius: '16px', borderLeft: '4px solid var(--primary)' }}>
                                     <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}><User size={20} /></div>
                                     <div>
-                                        <div style={{ fontWeight: 900, fontSize: '1.1rem', color: 'var(--primary)', cursor: 'pointer' }} onClick={() => { if(group.owner._id) { setQuickViewCustomerId(group.owner._id); setIsQuickViewOpen(true); } }}>{group.owner.fullName}</div>
+                                        <div style={{ fontWeight: 900, fontSize: '1.1rem', color: 'var(--primary)', cursor: 'pointer' }} onClick={() => { if (group.owner._id) { setQuickViewCustomerId(group.owner._id); setIsQuickViewOpen(true); } }}>{group.owner.fullName}</div>
                                         <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{group.owner.phoneNumber} • {group.pets.length} bé</div>
                                     </div>
                                 </div>
@@ -449,12 +449,12 @@ const Pets = () => {
                                 <input type="text" className="input-field" placeholder="Họ và tên..." value={customerName} onChange={e => setCustomerName(e.target.value)} required readOnly={!isNewCustomer} style={{ background: isNewCustomer ? 'white' : 'transparent', fontWeight: isNewCustomer ? 400 : 700 }} />
                             </div>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                                <input type="text" className="input-field" placeholder="Tên bé cưng..." name="name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
-                                <select className="input-field" name="species" value={formData.species} onChange={e => setFormData({...formData, species: e.target.value})}>
+                                <input type="text" className="input-field" placeholder="Tên bé cưng..." name="name" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} required />
+                                <select className="input-field" name="species" value={formData.species} onChange={e => setFormData({ ...formData, species: e.target.value })}>
                                     <option value="DOG">Chó</option><option value="CAT">Mèo</option><option value="OTHER">Khác</option>
                                 </select>
-                                <input type="text" className="input-field" placeholder="Giống loài..." name="breed" value={formData.breed} onChange={e => setFormData({...formData, breed: e.target.value})} />
-                                <input type="number" className="input-field" placeholder="Tuổi..." name="age" value={formData.age} onChange={e => setFormData({...formData, age: e.target.value})} />
+                                <input type="text" className="input-field" placeholder="Giống loài..." name="breed" value={formData.breed} onChange={e => setFormData({ ...formData, breed: e.target.value })} />
+                                <input type="number" className="input-field" placeholder="Tuổi..." name="age" value={formData.age} onChange={e => setFormData({ ...formData, age: e.target.value })} />
                             </div>
                             <div style={{ marginTop: '24px', display: 'flex', gap: '12px' }}>
                                 <button type="button" className="btn" style={{ flex: 1, background: '#f1f5f9' }} onClick={() => setIsModalOpen(false)}>Hủy</button>
@@ -480,7 +480,7 @@ const Pets = () => {
                             {historyLoading ? <div className="flex-center">Đang tải...</div> : medicalHistory.length === 0 ? <div className="flex-center" style={{ color: '#94a3b8' }}>Chưa có lịch sử khám bệnh.</div> : medicalHistory.map((rec, i) => (
                                 <div key={rec._id} style={{ padding: '20px', borderRadius: '20px', border: '1px solid #e2e8f0', position: 'relative', background: 'white' }}>
                                     <div style={{ position: 'absolute', top: '-10px', left: '20px', background: 'var(--primary)', color: 'white', padding: '2px 12px', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 800 }}>{new Date(rec.createdAt).toLocaleDateString('vi-VN')}</div>
-                                    <button 
+                                    <button
                                         onClick={() => handlePrintRecord(rec)}
                                         style={{ position: 'absolute', top: '15px', right: '15px', background: '#f0f9ff', color: 'var(--primary)', border: '1px solid #bae6fd', borderRadius: '8px', padding: '6px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', fontWeight: 700 }}
                                     >
@@ -492,14 +492,14 @@ const Pets = () => {
                                         <div><label style={{ fontSize: '0.65rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 800 }}>Nhiệt độ</label><div style={{ fontWeight: 700 }}>{rec.temperature || '--'} °C</div></div>
                                         <div><label style={{ fontSize: '0.65rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 800 }}>Bác sĩ phụ trách</label><div style={{ fontWeight: 700, color: 'var(--primary)' }}>{rec.doctorId?.fullName || 'BS'}</div></div>
                                     </div>
-                                    
+
                                     <div style={{ marginTop: '16px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                                         <div><label style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginBottom: '4px', fontWeight: 600 }}>C.Đoán lâm sàng / Triệu chứng:</label><div style={{ fontSize: '0.9rem' }}>{rec.symptoms}</div></div>
                                         <div><label style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Kết luận chẩn đoán:</label><div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#dc2626' }}>{rec.diagnosis}</div></div>
                                     </div>
 
                                     {rec.treatment && <div style={{ marginTop: '16px', padding: '12px', background: '#f0f9ff', borderRadius: '10px', color: '#0369a1', fontSize: '0.85rem' }}><strong>Hướng điều trị:</strong> {rec.treatment}</div>}
-                                    
+
                                     {rec.services && rec.services.length > 0 && (
                                         <div style={{ marginTop: '16px' }}>
                                             <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase' }}>Dịch vụ thực hiện</label>
@@ -537,6 +537,7 @@ const Pets = () => {
                     </div>
                 </div>, document.body
             )}
+
 
             <CustomerQuickView customerId={quickViewCustomerId} isOpen={isQuickViewOpen} onClose={() => setIsQuickViewOpen(false)} />
         </Layout>

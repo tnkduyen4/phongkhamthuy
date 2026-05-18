@@ -12,10 +12,10 @@ import {
     LogOut, Star, Award, Medal, ShieldCheck, Home, ListPlus, Info, User,
     X, CheckCircle2, AlertCircle, XCircle, RefreshCw, Wallet, Eye, UserPlus, Lock,
     Settings, History, MessageSquare, Camera, Bell, CalendarDays, CheckCircle,
-    Syringe, Edit2, Save, Smartphone, Laptop, Megaphone, Mail, Minus
+    Syringe, Edit2, Save, Smartphone, Laptop, Megaphone, Mail, Minus, Menu
 } from 'lucide-react';
 
-const API = 'http://localhost:5000/api/v1';
+const API = 'https://vet-clinic-1j57.onrender.com/api/v1';
 const H = () => ({ Authorization: `Bearer ${sessionStorage.getItem('token')}` });
 
 const TABS = [
@@ -54,7 +54,7 @@ const SectionTitle = ({ title, action, onAction }) => (
     </div>
 );
 const Wrap = ({ children }) => (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 24px' }}>{children}</div>
+    <div className="main-wrap" style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 24px' }}>{children}</div>
 );
 
 // ── Tab: Trang chủ (overview) ─────────────────────────────────────────────────
@@ -223,7 +223,7 @@ function HomeTab({ user, switchTab }) {
             </div>
 
             {/* ── BOTTOM GRID: Pets (left) + Membership (right) ── */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '20px', alignItems: 'stretch' }}>
+            <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '20px', alignItems: 'stretch' }}>
 
                 {/* Left column: Pets + Recent history */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -302,7 +302,7 @@ function HomeTab({ user, switchTab }) {
                     })()}
                 </div>
 
-                <div style={{ background: 'white', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '20px', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', position: 'relative', overflow: 'hidden' }}>
+                <div className="user-tier-card" style={{ background: 'white', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '20px', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', position: 'relative', overflow: 'hidden' }}>
                     {/* Soft tinted top accent */}
                     <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: tierInfo.cardGrad, borderRadius: '16px 16px 0 0' }} />
 
@@ -654,10 +654,10 @@ function CustomerProfileTab({ user, onUserUpdate, onToast }) {
     return (
         <Wrap>
             <h1 style={{ margin: '0 0 24px', fontSize: '1.5rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '10px' }}><Settings size={22} /> Cài đặt tài khoản</h1>
-            <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '20px', alignItems: 'start' }}>
+            <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '20px', alignItems: 'start' }}>
 
                 {/* ── LEFT: Settings Nav ── */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div className="profile-nav-container" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {/* User mini card */}
                     <div style={{ padding: '16px', borderRadius: '14px', background: 'white', border: '1px solid #e2e8f0', textAlign: 'center', marginBottom: '4px' }}>
                         <div style={{ position: 'relative', width: '64px', height: '64px', margin: '0 auto 10px' }}>
@@ -702,7 +702,7 @@ function CustomerProfileTab({ user, onUserUpdate, onToast }) {
                                 </div>
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                            <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
                                 <div>
                                     <label style={labelStyle}>Họ và tên *</label>
                                     <input style={inputStyle} value={info.fullName} onChange={e => setInfo(p => ({ ...p, fullName: e.target.value }))}
@@ -759,7 +759,7 @@ function CustomerProfileTab({ user, onUserUpdate, onToast }) {
                                 <Lock size={18} color="var(--primary)" /> Đổi mật khẩu
                             </div>
                             <MsgBar msg={pwdMsg} />
-                            <div style={{ maxWidth: '420px' }}>
+                            <div className="password-form" style={{ maxWidth: '420px' }}>
                                 {[
                                     { key: 'oldPassword', label: 'Mật khẩu hiện tại', show: 'old' },
                                     { key: 'newPassword', label: 'Mật khẩu mới', show: 'new', hint: 'Tối thiểu 6 ký tự' },
@@ -813,7 +813,7 @@ function CustomerProfileTab({ user, onUserUpdate, onToast }) {
                                 <Megaphone size={18} color="var(--primary)" /> Gửi khiếu nại / Phản hồi
                             </div>
                             <MsgBar msg={complaintMsg} />
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                            <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
                                 <div>
                                     <label style={labelStyle}>Danh mục</label>
                                     <select style={{ ...inputStyle, background: 'white' }} value={complaint.category} onChange={e => setComplaint(p => ({ ...p, category: e.target.value, referenceId: '' }))}>
@@ -3063,6 +3063,7 @@ export default function LandingPage() {
     const { showToast } = useToast();
     const [homeResetKey, setHomeResetKey] = useState(0);
     const [petsResetKey, setPetsResetKey] = useState(0);
+    const [showMobileMenu, setShowMobileMenu] = useState(false);
 
     // ── Khi URL có ?tab= hoặc ?login= ──
     useEffect(() => {
@@ -3128,13 +3129,44 @@ export default function LandingPage() {
                 )}
 
                 {/* Top bar */}
-                <div style={{ background: 'var(--primary)', padding: '7px 5%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', color: 'white', fontWeight: 500 }}>
-                    <div style={{ display: 'flex', gap: '20px' }}>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><MapPin size={12} /> 123 Nguyễn Văn Linh, Q.7, TP.HCM</span>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><Clock size={12} /> Thứ 2 – CN: 07:30 – 21:00</span>
+                <div className="top-info-bar" style={{ 
+                    background: 'var(--primary)', 
+                    padding: '7px 5%', 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center', 
+                    fontSize: '0.75rem', 
+                    color: 'white', 
+                    fontWeight: 500,
+                    overflow: 'hidden'
+                }}>
+                    <div className="hide-mobile" style={{ display: 'flex', gap: '20px' }}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><MapPin size={11} /> 123 Nguyễn Văn Linh, Q.7, TP.HCM</span>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><Clock size={11} /> Thứ 2 – CN: 07:30 – 21:00</span>
                     </div>
-                    <span><Phone size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '5px' }} />Hotline 24/7: <strong>0909 123 456</strong></span>
+                    <span style={{ marginLeft: 'auto' }}>
+                        <Phone size={11} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '5px' }} />
+                        Hotline 24/7: <strong>0909 123 456</strong>
+                    </span>
                 </div>
+
+                <style dangerouslySetInnerHTML={{ __html: `
+                    @media (max-width: 768px) {
+                        .hide-mobile { display: none !important; }
+                        .show-mobile-only { display: flex !important; }
+                        .top-info-bar { justify-content: center !important; font-size: 0.7rem !important; }
+                        .header-tabs { padding: 0 8px !important; }
+                        .header-tab-btn { padding: 0 10px !important; font-size: 0.8rem !important; }
+                        .main-wrap { padding: 16px 12px !important; }
+                        .responsive-grid { grid-template-columns: 1fr !important; }
+                        .user-tier-card { display: none !important; }
+                        .profile-nav-container { flex-direction: row !important; flex-wrap: wrap !important; padding-bottom: 10px !important; gap: 8px !important; }
+                        .profile-nav-container::-webkit-scrollbar { display: none; }
+                        .profile-nav-container > div:first-child { display: none !important; }
+                        .profile-nav-container button { white-space: nowrap !important; width: auto !important; padding: 10px 18px !important; flex-shrink: 0 !important; flex: 1 0 calc(50% - 8px); text-align: center !important; justify-content: center !important; }
+                        .password-form { max-width: 100% !important; }
+                    }
+                `}} />
 
                 {/* Header */}
                 <header style={{ background: 'white', padding: '0 5%', height: '66px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #e2e8f0', position: 'sticky', top: 0, zIndex: 100, boxShadow: '0 1px 8px rgba(0,0,0,0.05)', gap: '16px' }}>
@@ -3144,39 +3176,84 @@ export default function LandingPage() {
                     </button>
 
                     {isCustomer ? (
-                        <div style={{ display: 'flex', alignItems: 'stretch', height: '66px', gap: '0', overflow: 'auto' }}>
-                            {TABS.map(tab => {
-                                const active = activeTab === tab.id;
-                                const Icon = tab.icon;
-                                return (
-                                    <button key={tab.id} onClick={() => {
-                                        if (tab.id === 'home' && activeTab === 'home') setHomeResetKey(k => k + 1);
-                                        if (tab.id === 'pets' && activeTab === 'pets') setPetsResetKey(k => k + 1);
-                                        setActiveTab(tab.id);
-                                    }}
-                                        style={{
-                                            display: 'flex', alignItems: 'center', gap: '6px',
-                                            padding: '0 14px',
-                                            border: 'none', borderBottom: active ? '2.5px solid var(--primary)' : '2.5px solid transparent',
-                                            cursor: 'pointer',
-                                            fontWeight: active ? 700 : 500,
-                                            fontSize: '0.875rem',
-                                            fontFamily: 'inherit',
-                                            background: 'transparent',
-                                            color: active ? 'var(--primary)' : '#64748b',
-                                            transition: 'all 0.15s',
-                                            whiteSpace: 'nowrap',
-                                            borderRadius: 0,
-                                            marginTop: '1px'
+                        <>
+                            {/* Desktop Tabs */}
+                            <div className="header-tabs hide-mobile" style={{ display: 'flex', alignItems: 'stretch', height: '66px', gap: '0' }}>
+                                {TABS.map(tab => {
+                                    const active = activeTab === tab.id;
+                                    const Icon = tab.icon;
+                                    return (
+                                        <button key={tab.id} onClick={() => {
+                                            if (tab.id === 'home' && activeTab === 'home') setHomeResetKey(k => k + 1);
+                                            if (tab.id === 'pets' && activeTab === 'pets') setPetsResetKey(k => k + 1);
+                                            setActiveTab(tab.id);
                                         }}
-                                        onMouseEnter={e => { if (!active) e.currentTarget.style.color = 'var(--primary)'; }}
-                                        onMouseLeave={e => { if (!active) e.currentTarget.style.color = '#64748b'; }}
-                                    >
-                                        <Icon size={14} /> {tab.label}
-                                    </button>
-                                );
-                            })}
-                        </div>
+                                            className="header-tab-btn"
+                                            style={{
+                                                display: 'flex', alignItems: 'center', gap: '6px',
+                                                padding: '0 14px',
+                                                border: 'none', borderBottom: active ? '2.5px solid var(--primary)' : '2.5px solid transparent',
+                                                cursor: 'pointer',
+                                                fontWeight: active ? 700 : 500,
+                                                fontSize: '0.875rem',
+                                                fontFamily: 'inherit',
+                                                background: 'transparent',
+                                                color: active ? 'var(--primary)' : '#64748b',
+                                                transition: 'all 0.15s',
+                                                whiteSpace: 'nowrap',
+                                                borderRadius: 0,
+                                                marginTop: '1px'
+                                            }}
+                                            onMouseEnter={e => { if (!active) e.currentTarget.style.color = 'var(--primary)'; }}
+                                            onMouseLeave={e => { if (!active) e.currentTarget.style.color = '#64748b'; }}
+                                        >
+                                            <Icon size={14} /> {tab.label}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Mobile Hamburger Button */}
+                            <button className="show-mobile-only" 
+                                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                                style={{ display: 'none', background: 'none', border: 'none', color: 'var(--text-main)', cursor: 'pointer', padding: '8px' }}>
+                                {showMobileMenu ? <X size={24} /> : <Menu size={24} />}
+                            </button>
+
+                            {/* Mobile Menu List (Overlay) */}
+                            {showMobileMenu && (
+                                <div className="mobile-menu-overlay animate-fade-in" style={{ position: 'fixed', top: '113px', left: 0, right: 0, bottom: 0, background: 'rgba(255,255,255,0.98)', zIndex: 1000, padding: '20px' }}>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                        {TABS.map(tab => {
+                                            const active = activeTab === tab.id;
+                                            const Icon = tab.icon;
+                                            return (
+                                                <button key={tab.id} onClick={() => {
+                                                    setActiveTab(tab.id);
+                                                    setShowMobileMenu(false);
+                                                }}
+                                                style={{
+                                                    display: 'flex', alignItems: 'center', gap: '12px',
+                                                    padding: '16px 20px', borderRadius: '12px',
+                                                    border: 'none', background: active ? 'var(--primary-light)' : '#f8fafc',
+                                                    color: active ? 'var(--primary)' : 'var(--text-main)',
+                                                    fontWeight: active ? 700 : 500,
+                                                    fontSize: '1rem', textAlign: 'left', cursor: 'pointer'
+                                                }}>
+                                                    <Icon size={20} /> {tab.label}
+                                                </button>
+                                            );
+                                        })}
+                                        <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid #e2e8f0' }}>
+                                            <button onClick={() => { setShowLogout(true); setShowMobileMenu(false); }}
+                                                style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '16px 20px', width: '100%', border: 'none', background: '#fff1f2', color: '#e11d48', fontWeight: 700, borderRadius: '12px', cursor: 'pointer' }}>
+                                                <LogOut size={20} /> Đăng xuất
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </>
 
                     ) : (
                         <nav style={{ display: 'flex', gap: '8px' }}>

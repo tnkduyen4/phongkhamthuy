@@ -28,8 +28,8 @@ import {
     Clipboard
 } from "lucide-react";
 
-const API = 'http://localhost:5000/api/v1';
-const RECORDS_API = 'http://localhost:5000/api/v1/records';
+const API = 'https://vet-clinic-1j57.onrender.com/api/v1';
+const RECORDS_API = 'https://vet-clinic-1j57.onrender.com/api/v1/records';
 
 // Debounce hook
 const useDebounce = (value, delay) => {
@@ -293,7 +293,7 @@ const MedicalRecords = () => {
             return;
         }
         const token = sessionStorage.getItem('token');
-        axios.get(`http://localhost:5000/api/v1/users?role=CUSTOMER&search=${debouncedPhoneSearch}`, {
+        axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/users?role=CUSTOMER&search=${debouncedPhoneSearch}`, {
             headers: { Authorization: `Bearer ${token}` }
         }).then(r => {
             setCustomerPhoneSuggestions(r.data.data.slice(0, 50));
@@ -871,50 +871,51 @@ const MedicalRecords = () => {
             </div>
 
             {activeTab === 'EXAM' && (
-            <>
-                {/* ⚠ Banner cảnh báo ca chờ khám (sticky, chỉ hiện với bác sĩ/admin) */}
-                {['ADMIN', 'DOCTOR'].includes(user?.role) && (() => {
-                    const waiting = appointments.filter(a => a.status === 'ARRIVED' && a.category !== 'VACCINATION' && a.type !== 'GROOMING');
-                    if (waiting.length === 0) return null;
-                    return (
-                        <div style={{
-                            position: 'sticky', top: 0, zIndex: 95,
-                            marginBottom: '18px',
-                            padding: '12px 20px',
-                            background: 'linear-gradient(135deg, #fff7ed 0%, #fffbeb 100%)',
-                            border: '2px solid #fb923c',
-                            borderRadius: '14px',
-                            display: 'flex', alignItems: 'center', gap: '14px',
-                            boxShadow: '0 4px 20px rgba(251,146,60,0.2)',
-                            animation: 'waitingAlert 2s ease-in-out infinite',
-                        }}>
+                <>
+                    {/* ⚠ Banner cảnh báo ca chờ khám (sticky, chỉ hiện với bác sĩ/admin) */}
+                    {['ADMIN', 'DOCTOR'].includes(user?.role) && (() => {
+                        const waiting = appointments.filter(a => a.status === 'ARRIVED' && a.category !== 'VACCINATION' && a.type !== 'GROOMING');
+                        if (waiting.length === 0) return null;
+                        return (
                             <div style={{
-                                width: '36px', height: '36px', flexShrink: 0,
-                                borderRadius: '50%', background: '#fed7aa',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                animation: 'badgePulse 1.2s ease-in-out infinite'
+                                position: 'sticky', top: 0, zIndex: 95,
+                                marginBottom: '18px',
+                                padding: '12px 20px',
+                                background: 'linear-gradient(135deg, #fff7ed 0%, #fffbeb 100%)',
+                                border: '2px solid #fb923c',
+                                borderRadius: '14px',
+                                display: 'flex', alignItems: 'center', gap: '14px',
+                                boxShadow: '0 4px 20px rgba(251,146,60,0.2)',
+                                animation: 'waitingAlert 2s ease-in-out infinite',
                             }}>
-                                <AlertCircle size={18} color="#c2410c" />
-                            </div>
-                            <div style={{ flex: 1 }}>
-                                <div style={{ fontWeight: 800, color: '#9a3412', fontSize: '0.95rem' }}>
-                                    Có <span style={{ fontSize: '1.15rem' }}>{waiting.length}</span> bệnh nhân đang chờ khám!
+                                <div style={{
+                                    width: '36px', height: '36px', flexShrink: 0,
+                                    borderRadius: '50%', background: '#fed7aa',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    animation: 'badgePulse 1.2s ease-in-out infinite'
+                                }}>
+                                    <AlertCircle size={18} color="#c2410c" />
                                 </div>
-                                <div style={{ fontSize: '0.78rem', color: '#c2410c', marginTop: '2px' }}>
-                                    {waiting.map(a => a.petId?.name).filter(Boolean).join(', ')}
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontWeight: 800, color: '#9a3412', fontSize: '0.95rem' }}>
+                                        Có <span style={{ fontSize: '1.15rem' }}>{waiting.length}</span> bệnh nhân đang chờ khám!
+                                    </div>
+                                    <div style={{ fontSize: '0.78rem', color: '#c2410c', marginTop: '2px' }}>
+                                        {waiting.map(a => a.petId?.name).filter(Boolean).join(', ')}
+                                    </div>
                                 </div>
+                                <button
+                                    onClick={() => document.getElementById('waiting-list-anchor')?.scrollIntoView({ behavior: 'smooth' })}
+                                    style={{ padding: '7px 16px', borderRadius: '10px', border: 'none', background: '#c2410c', color: 'white', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap' }}
+                                >
+                                    Xem ngay
+                                </button>
                             </div>
-                            <button
-                                onClick={() => document.getElementById('waiting-list-anchor')?.scrollIntoView({ behavior: 'smooth' })}
-                                style={{ padding: '7px 16px', borderRadius: '10px', border: 'none', background: '#c2410c', color: 'white', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap' }}
-                            >
-                                Xem ngay
-                            </button>
-                        </div>
-                    );
-                })()}
+                        );
+                    })()}
 
-                <style dangerouslySetInnerHTML={{ __html: `
+                    <style dangerouslySetInnerHTML={{
+                        __html: `
                     @keyframes waitingAlert {
                         0%, 100% { border-color: #fb923c; box-shadow: 0 4px 20px rgba(251,146,60,0.2); }
                         50% { border-color: #ef4444; box-shadow: 0 4px 28px rgba(239,68,68,0.35); }

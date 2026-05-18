@@ -87,7 +87,7 @@ const ForceChangePassword = () => {
             let staffList = [];
             try {
                 const token = sessionStorage.getItem('token');
-                const res = await fetch('http://localhost:5000/api/v1/users/me/other-face-photos', {
+                const res = await fetch('https://vet-clinic-1j57.onrender.com/api/v1/users/me/other-face-photos', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 if (!res.ok) throw new Error(`Server trả lỗi HTTP ${res.status}`);

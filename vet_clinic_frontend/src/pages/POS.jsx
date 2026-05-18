@@ -18,7 +18,7 @@ function useDebounce(value, delay) {
     return debounced;
 }
 
-const API = 'http://localhost:5000/api/v1';
+const API = 'https://vet-clinic-1j57.onrender.com/api/v1';
 const token = () => sessionStorage.getItem('token');
 const headers = () => ({ Authorization: `Bearer ${token()}` });
 
@@ -135,7 +135,7 @@ const NewCustomerModal = ({ phone, onCreated, onClose }) => {
 
     const submit = async () => {
         if (!form.fullName || !form.phoneNumber) { setErr('Vui lòng nhập Tên và Số điện thoại.'); return; }
-        
+
         // Validation SĐT Việt Nam (10 số)
         const vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
         if (!vnf_regex.test(form.phoneNumber)) {
@@ -251,7 +251,7 @@ const POS = () => {
 
     const valuePerPoint = clinicConfig?.rewardPointsConfig?.valuePerPoint || 1000;
     const globalMaxPoint = clinicConfig?.rewardPointsConfig?.maxPointsPerUse || 999999;
-    
+
     const maxPByConfig = selectedCustomer ? Math.min(selectedCustomer.rewardPoints, globalMaxPoint) : 0;
     const billSubtotal = Math.max(0, total - (Number(discountAmount) || 0));
     const maxPByBill = Math.floor(billSubtotal / valuePerPoint);
@@ -289,7 +289,7 @@ const POS = () => {
         setSuccessMsg(''); setErrorMsg('');
         const validItems = cartItems.filter(i => i.medicineId && i.quantity > 0);
         if (validItems.length === 0) { setErrorMsg('Vui lòng chọn ít nhất 1 sản phẩm.'); return; }
-        
+
         const checkTotal = validItems.reduce((sum, item) => {
             const med = allMedicines.find(m => m._id === item.medicineId);
             return sum + (med ? med.retailPrice * item.quantity : 0);
@@ -331,10 +331,10 @@ const POS = () => {
                 pointsUsed: Number(pointsUsed) || 0,
                 paymentMethod,
             }, { headers: headers() });
-            
+
             setSuccessMsg('Đã thu tiền và xuất kho thành công!');
             toast('Đã thu tiền và xuất kho thành công!', 'success', 5000);
-            
+
             // Hiện bản in ngay lập tức
             if (invoiceRes.data.success) {
                 setPrintData(invoiceRes.data.data);
@@ -549,30 +549,30 @@ const POS = () => {
                             <div style={{ background: '#f8fafc', padding: '20px', borderRadius: '16px', border: '1px solid #e2e8f0', marginBottom: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                                 <div>
                                     <label style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: '8px', display: 'block', color: 'var(--text-muted)' }}>Tiền khách đưa (VNĐ)</label>
-                                    <input 
-                                        type="number" 
-                                        className="input-field" 
+                                    <input
+                                        type="number"
+                                        className="input-field"
                                         style={{ marginBottom: 0, fontWeight: 700, fontSize: '1.1rem' }}
-                                        value={amountReceived} 
+                                        value={amountReceived}
                                         onChange={(e) => {
                                             const val = e.target.value;
                                             setAmountReceived(val);
                                             setChangeAmount(val ? Number(val) - finalTotal : 0);
-                                        }} 
-                                        placeholder="Vd: 500000" 
+                                        }}
+                                        placeholder="Vd: 500000"
                                     />
                                 </div>
                                 <div>
                                     <label style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: '8px', display: 'block', color: 'var(--text-muted)' }}>Tiền thừa trả khách</label>
-                                    <div style={{ 
-                                        height: '48px', 
-                                        background: changeAmount < 0 ? '#fee2e2' : '#dcfce7', 
-                                        borderRadius: '10px', 
-                                        display: 'flex', 
-                                        alignItems: 'center', 
-                                        padding: '0 16px', 
-                                        fontWeight: 800, 
-                                        fontSize: '1.2rem', 
+                                    <div style={{
+                                        height: '48px',
+                                        background: changeAmount < 0 ? '#fee2e2' : '#dcfce7',
+                                        borderRadius: '10px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        padding: '0 16px',
+                                        fontWeight: 800,
+                                        fontSize: '1.2rem',
                                         color: changeAmount < 0 ? '#dc2626' : '#059669',
                                         border: '1px solid ' + (changeAmount < 0 ? '#fecaca' : '#bbf7d0')
                                     }}>
@@ -844,7 +844,7 @@ const POS = () => {
                                     <ShoppingCart size={32} />
                                 </div>
                                 <h3 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-main)' }}>Xác nhận thanh toán</h3>
-                                <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '8px' }}>Bạn có chắc chắn muốn xuất kho và in hóa đơn cho <strong style={{color: 'var(--primary)'}}>{selectedCustomer?.fullName || 'Khách vãng lai'}</strong>?</p>
+                                <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '8px' }}>Bạn có chắc chắn muốn xuất kho và in hóa đơn cho <strong style={{ color: 'var(--primary)' }}>{selectedCustomer?.fullName || 'Khách vãng lai'}</strong>?</p>
                             </div>
                             <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '8px', background: 'white' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>

@@ -44,7 +44,7 @@ const Users = () => {
         try {
             setLoading(true);
             const token = sessionStorage.getItem('token');
-            const url = `http://localhost:5000/api/v1/users?role=CUSTOMER${showArchived ? '&includeInactive=true' : ''}`;
+            const url = `https://vet-clinic-1j57.onrender.com/api/v1/users?role=CUSTOMER${showArchived ? '&includeInactive=true' : ''}`;
             const usersRes = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
 
             if (usersRes.data.success) {
@@ -67,7 +67,7 @@ const Users = () => {
         if (urlId) {
             const findAndOpen = async () => {
                 const token = sessionStorage.getItem('token');
-                const res = await axios.get(`http://localhost:5000/api/v1/users/${urlId}`, { headers: { Authorization: `Bearer ${token}` } });
+                const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/users/${urlId}`, { headers: { Authorization: `Bearer ${token}` } });
                 if (res.data.success) {
                     handleOpenDetailModal(res.data.data);
                 }
@@ -94,14 +94,14 @@ const Users = () => {
             const token = sessionStorage.getItem('token');
             
             // Lấy chi tiết user để có editHistory
-            const userRes = await axios.get(`http://localhost:5000/api/v1/users/${user._id || user}`, { headers: { Authorization: `Bearer ${token}` } });
+            const userRes = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/users/${user._id || user}`, { headers: { Authorization: `Bearer ${token}` } });
             if (userRes.data.success) {
                 setSelectedUser(userRes.data.data);
             } else {
                 setSelectedUser(user);
             }
 
-            const res = await axios.get(`http://localhost:5000/api/v1/pets?ownerId=${user._id || user}`, { headers: { Authorization: `Bearer ${token}` } });
+            const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/pets?ownerId=${user._id || user}`, { headers: { Authorization: `Bearer ${token}` } });
             if (res.data.success) {
                 setUserPetsDetail(res.data.data);
             }
@@ -136,7 +136,7 @@ const Users = () => {
         try {
             const token = sessionStorage.getItem('token');
             // Check if user has relations
-            const checkRes = await axios.get(`http://localhost:5000/api/v1/users/${targetUser._id}/check-delete`, {
+            const checkRes = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/users/${targetUser._id}/check-delete`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const hasRelations = checkRes.data.hasRelations;
@@ -148,7 +148,7 @@ const Users = () => {
                     `Khách hàng ${targetUser.fullName} đang có các dữ liệu liên quan (Hóa đơn, Bệnh án...). Hệ thống không thể xóa vĩnh viễn để bảo toàn dữ liệu.\n\nBạn có muốn NGƯNG HOẠT ĐỘNG (Lưu trữ vào thùng rác) khách hàng này không?`,
                     async () => {
                         try {
-                            const res = await axios.delete(`http://localhost:5000/api/v1/users/${targetUser._id}`, { headers: { Authorization: `Bearer ${token}` } });
+                            const res = await axios.delete(`https://vet-clinic-1j57.onrender.com/api/v1/users/${targetUser._id}`, { headers: { Authorization: `Bearer ${token}` } });
                             if (res.data.success) {
                                 showToast('Đã lưu trữ hồ sơ khách hàng thành công!');
                                 handleCloseDetailModal();
@@ -166,7 +166,7 @@ const Users = () => {
                     `Khách hàng ${targetUser.fullName} không có liên kết nào quan trọng trong hệ thống.\n\nBạn có chắc chắn muốn XÓA VĨNH VIỄN khách hàng này không? Dữ liệu sẽ không thể khôi phục.`,
                     async () => {
                         try {
-                            const res = await axios.delete(`http://localhost:5000/api/v1/users/${targetUser._id}?force=true`, { headers: { Authorization: `Bearer ${token}` } });
+                            const res = await axios.delete(`https://vet-clinic-1j57.onrender.com/api/v1/users/${targetUser._id}?force=true`, { headers: { Authorization: `Bearer ${token}` } });
                             if (res.data.success) {
                                 showToast('Đã xóa vĩnh viễn khách hàng thành công!');
                                 handleCloseDetailModal();
@@ -191,7 +191,7 @@ const Users = () => {
             async () => {
                 try {
                     const token = sessionStorage.getItem('token');
-                    const res = await axios.post('http://localhost:5000/api/v1/users/bulk-delete', { userIds: selectedUserIds }, { headers: { Authorization: `Bearer ${token}` } });
+                    const res = await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/users/bulk-delete', { userIds: selectedUserIds }, { headers: { Authorization: `Bearer ${token}` } });
                     if (res.data.success) {
                         showToast(res.data.message);
                         fetchData();
@@ -210,7 +210,7 @@ const Users = () => {
             async () => {
                 try {
                     const token = sessionStorage.getItem('token');
-                    const res = await axios.patch(`http://localhost:5000/api/v1/users/${userId}/reactivate`, {}, { headers: { Authorization: `Bearer ${token}` } });
+                    const res = await axios.patch(`https://vet-clinic-1j57.onrender.com/api/v1/users/${userId}/reactivate`, {}, { headers: { Authorization: `Bearer ${token}` } });
                     if (res.data.success) {
                         showToast('Đã khôi phục khách hàng thành công!');
                         fetchData();
@@ -277,7 +277,7 @@ const Users = () => {
 
             if (editingUserId) {
                 // API SỬA THÔNG TIN KHÁCH HÀNG (PUT)
-                const res = await axios.put(`http://localhost:5000/api/v1/users/${editingUserId}`, formData, {
+                const res = await axios.put(`https://vet-clinic-1j57.onrender.com/api/v1/users/${editingUserId}`, formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 if (res.data.success) {
@@ -287,7 +287,7 @@ const Users = () => {
                 }
             } else {
                 // API TẠO KHÁCH HÀNG MỚI (POST Register)
-                const res = await axios.post('http://localhost:5000/api/v1/auth/register', { ...formData, password: 'app_user_password' });
+                const res = await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/auth/register', { ...formData, password: 'app_user_password' });
                 if (res.data.success) {
                     const newUserId = res.data.data._id;
 
@@ -295,7 +295,7 @@ const Users = () => {
                     if (petData.name) {
                         const finalToken = token || res.data.data.token;
                         const petPayload = { ...petData, ownerId: newUserId };
-                        await axios.post('http://localhost:5000/api/v1/pets', petPayload, {
+                        await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/pets', petPayload, {
                             headers: { Authorization: `Bearer ${finalToken}` }
                         });
                     }

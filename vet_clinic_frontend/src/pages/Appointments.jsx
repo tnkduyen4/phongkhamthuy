@@ -71,7 +71,7 @@ const Appointments = () => {
         date: ''
     });
     const [onCallStaff, setOnCallStaff] = useState([]);
-    
+
     // Khởi tạo search từ URL nếu có (từ Helpdesk chuyển qua)
     const [searchQuery, setSearchQuery] = useState(new URLSearchParams(location.search).get('search') || '');
     const [showTrash, setShowTrash] = useState(false); // Thùng rác (hiển thị ca đã hủy)
@@ -80,7 +80,7 @@ const Appointments = () => {
     const fetchAppointments = async (filters = filterState) => {
         try {
             const token = sessionStorage.getItem('token');
-            let url = 'http://localhost:5000/api/v1/appointments';
+            let url = 'https://vet-clinic-1j57.onrender.com/api/v1/appointments';
             const params = new URLSearchParams();
             if (filters.status) params.append('status', filters.status);
             if (filters.type) params.append('type', filters.type);
@@ -95,19 +95,19 @@ const Appointments = () => {
             if (res.data.success) {
                 const aptList = res.data.data;
                 setAppointments(aptList);
-                
+
                 // Logic tính toán badge NEW (chỉ hiện 1 lần lúc mới tải trang)
                 const userIdStr = user?._id || 'guest';
                 const seenNewApts = JSON.parse(localStorage.getItem(`seen_new_apts_${userIdStr}`)) || [];
                 const justSeen = [];
-                
+
                 aptList.forEach(apt => {
                     if (apt.status === 'BOOKED' && apt.createdAt) {
                         const ageMs = new Date() - new Date(apt.createdAt);
                         if (ageMs < 2 * 60 * 60 * 1000) {
-                            const isCustomerBooked = apt.bookingSource === 'CUSTOMER_APP' || !apt.bookingSource; 
+                            const isCustomerBooked = apt.bookingSource === 'CUSTOMER_APP' || !apt.bookingSource;
                             const isDoctorBooked = apt.bookingSource === 'DOCTOR' && ['FOLLOW_UP', 'VACCINATION'].includes(apt.category);
-                            
+
                             if (isCustomerBooked || isDoctorBooked) {
                                 if (!seenNewApts.includes(apt._id)) {
                                     justSeen.push(apt._id); // Chưa xem => Đây là lần xem đầu tiên
@@ -140,7 +140,7 @@ const Appointments = () => {
     const fetchCustomers = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.get('http://localhost:5000/api/v1/users?role=CUSTOMER', {
+            const res = await axios.get('https://vet-clinic-1j57.onrender.com/api/v1/users?role=CUSTOMER', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -154,7 +154,7 @@ const Appointments = () => {
     const fetchStaff = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.get('http://localhost:5000/api/v1/users', {
+            const res = await axios.get('https://vet-clinic-1j57.onrender.com/api/v1/users', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -171,7 +171,7 @@ const Appointments = () => {
         try {
             const token = sessionStorage.getItem('token');
             const today = new Date().toISOString().split('T')[0];
-            let url = `http://localhost:5000/api/v1/hrm/schedules?date=${today}&isOnCall=true`;
+            let url = `https://vet-clinic-1j57.onrender.com/api/v1/hrm/schedules?date=${today}&isOnCall=true`;
             // Lọc theo chi nhánh của người dùng hiện tại
             const res = await axios.get(url, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -191,7 +191,7 @@ const Appointments = () => {
             const token = sessionStorage.getItem('token');
             // Lấy ngày hôm nay theo VN (YYYY-MM-DD)
             const todayVN = new Date(Date.now() + 7 * 60 * 60 * 1000).toISOString().split('T')[0];
-            const res = await axios.get(`http://localhost:5000/api/v1/hrm/duty-staff?date=${todayVN}`, {
+            const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/hrm/duty-staff?date=${todayVN}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -242,7 +242,7 @@ const Appointments = () => {
         if (!isModalOpen) return;
         if (debouncedPhone.length < 2) { setPhoneSuggestions([]); setShowPhoneDrop(false); return; }
         const token = sessionStorage.getItem('token');
-        axios.get(`http://localhost:5000/api/v1/users?role=CUSTOMER&search=${debouncedPhone}`, {
+        axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/users?role=CUSTOMER&search=${debouncedPhone}`, {
             headers: { Authorization: `Bearer ${token}` }
         }).then(r => {
             setPhoneSuggestions((r.data.data || []).slice(0, 8));
@@ -260,7 +260,7 @@ const Appointments = () => {
         setCustomerPets([]);
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.get(`http://localhost:5000/api/v1/pets?ownerId=${c._id}`, {
+            const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/pets?ownerId=${c._id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -368,14 +368,14 @@ const Appointments = () => {
             try {
                 const token = sessionStorage.getItem('token');
                 // 1. Tạo khách mới
-                const r = await axios.post('http://localhost:5000/api/v1/users/quick-customer',
+                const r = await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/users/quick-customer',
                     { fullName: newCustomerName.trim(), phoneNumber: phoneInput.trim() },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 resolvedCustomerId = r.data.data._id;
 
                 // 2. Tạo thú cưng mới cho khách này
-                const petR = await axios.post('http://localhost:5000/api/v1/pets',
+                const petR = await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/pets',
                     {
                         name: newPetName.trim(),
                         ownerId: resolvedCustomerId,
@@ -402,7 +402,7 @@ const Appointments = () => {
         try {
             const token = sessionStorage.getItem('token');
             const payload = { ...formData, customerId: resolvedCustomerId, petId: resolvedPetId };
-            const res = await axios.post('http://localhost:5000/api/v1/appointments', payload, {
+            const res = await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/appointments', payload, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -423,7 +423,7 @@ const Appointments = () => {
     const handleStatusOrStaffUpdate = async (appointmentId, updateData) => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.patch(`http://localhost:5000/api/v1/appointments/${appointmentId}/status`,
+            const res = await axios.patch(`https://vet-clinic-1j57.onrender.com/api/v1/appointments/${appointmentId}/status`,
                 updateData,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -508,7 +508,7 @@ const Appointments = () => {
         try {
             const token = sessionStorage.getItem('token');
             const res = await axios.patch(
-                `http://localhost:5000/api/v1/appointments/${rescheduleForm.aptId}/reschedule`,
+                `https://vet-clinic-1j57.onrender.com/api/v1/appointments/${rescheduleForm.aptId}/reschedule`,
                 { date: rescheduleForm.date, timeSlot: rescheduleForm.timeSlot, note: rescheduleForm.note },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -620,11 +620,11 @@ const Appointments = () => {
             return { label: 'App', color: '#7c3aed', bg: '#f5f3ff' };
         }
         switch (source) {
-            case 'CUSTOMER_APP':  return { label: 'App khách', color: '#7c3aed', bg: '#f5f3ff' };
-            case 'RECEPTIONIST':  return { label: 'Lễ tân',    color: '#0369a1', bg: '#e0f2fe' };
-            case 'DOCTOR':        return { label: 'Bác sĩ',     color: '#059669', bg: '#dcfce7' };
-            case 'SYSTEM':        return { label: 'Hệ thống',   color: '#64748b', bg: '#f1f5f9' };
-            default:              return { label: source,     color: '#94a3b8', bg: '#f8fafc' };
+            case 'CUSTOMER_APP': return { label: 'App khách', color: '#7c3aed', bg: '#f5f3ff' };
+            case 'RECEPTIONIST': return { label: 'Lễ tân', color: '#0369a1', bg: '#e0f2fe' };
+            case 'DOCTOR': return { label: 'Bác sĩ', color: '#059669', bg: '#dcfce7' };
+            case 'SYSTEM': return { label: 'Hệ thống', color: '#64748b', bg: '#f1f5f9' };
+            default: return { label: source, color: '#94a3b8', bg: '#f8fafc' };
         }
     };
 
@@ -669,12 +669,12 @@ const Appointments = () => {
             // Thứ tự ưu tiên trạng thái (số lớn = hiện trước)
             const STATUS_ORDER = {
                 'RESCHEDULE_PENDING': 6,  // Chờ phản hồi — cấp thiết nhất
-                'ARRIVED':            5,  // Đã đến
-                'IN_PROGRESS':        4,  // Đang phục vụ
-                'READY_FOR_PAYMENT':  3,  // Chờ thanh toán
-                'BOOKED':             2,  // Đã đặt
-                'COMPLETED':          1,  // Hoàn tất
-                'CANCELLED':          0,  // Đã hủy
+                'ARRIVED': 5,  // Đã đến
+                'IN_PROGRESS': 4,  // Đang phục vụ
+                'READY_FOR_PAYMENT': 3,  // Chờ thanh toán
+                'BOOKED': 2,  // Đã đặt
+                'COMPLETED': 1,  // Hoàn tất
+                'CANCELLED': 0,  // Đã hủy
             };
 
             const prioA = STATUS_ORDER[a.status] ?? -1;
@@ -740,7 +740,7 @@ const Appointments = () => {
                 );
                 const staffGroups = [
                     { label: '👨‍⚕️ Bác sĩ', members: dutyStaff.filter(s => s.role === 'DOCTOR') },
-                    { label: '✂️ Groomer',   members: dutyStaff.filter(s => s.role === 'GROOMER') },
+                    { label: '✂️ Groomer', members: dutyStaff.filter(s => s.role === 'GROOMER') },
                 ].filter(g => g.members.length > 0);
 
                 return (
@@ -1031,9 +1031,9 @@ const Appointments = () => {
                                                         // So sánh ngày theo giờ LOCAL (tránh UTC shift)
                                                         const toLocalStr = d => {
                                                             const dd = new Date(d);
-                                                            return `${dd.getFullYear()}-${String(dd.getMonth()+1).padStart(2,'0')}-${String(dd.getDate()).padStart(2,'0')}`;
+                                                            return `${dd.getFullYear()}-${String(dd.getMonth() + 1).padStart(2, '0')}-${String(dd.getDate()).padStart(2, '0')}`;
                                                         };
-                                                        const todayStr  = toLocalStr(now);
+                                                        const todayStr = toLocalStr(now);
                                                         const aptDayStr = toLocalStr(aptDay);
 
                                                         if (aptDayStr > todayStr) return false; // tương lai → ẩn
@@ -1458,10 +1458,10 @@ const Appointments = () => {
                                         <select className="input-field" name="timeSlot" value={formData.timeSlot} onChange={handleInputChange} required style={{ marginBottom: 0 }}>
                                             <option value="">-- Chọn ca --</option>
                                             <optgroup label="🌅 Ca sáng">
-                                                {['08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30'].map(s => <option key={s} value={s}>{s}</option>)}
+                                                {['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30'].map(s => <option key={s} value={s}>{s}</option>)}
                                             </optgroup>
                                             <optgroup label="☀️ Ca chiều">
-                                                {['13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30'].map(s => <option key={s} value={s}>{s}</option>)}
+                                                {['13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30'].map(s => <option key={s} value={s}>{s}</option>)}
                                             </optgroup>
                                         </select>
                                     </div>
@@ -1581,12 +1581,12 @@ const Appointments = () => {
                                     onChange={e => setRescheduleForm(p => ({ ...p, timeSlot: e.target.value }))}
                                 >
                                     <optgroup label="🌅 Ca sáng">
-                                        {['08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30'].map(t => (
+                                        {['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30'].map(t => (
                                             <option key={t} value={t}>{t}</option>
                                         ))}
                                     </optgroup>
                                     <optgroup label="☀️ Ca chiều">
-                                        {['13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30'].map(t => (
+                                        {['13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30'].map(t => (
                                             <option key={t} value={t}>{t}</option>
                                         ))}
                                     </optgroup>

@@ -127,9 +127,9 @@ const Dashboard = () => {
     const [showGreeting, setShowGreeting] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     // ── Activity Log state ──
-    const [actLogs, setActLogs]   = useState([]);
+    const [actLogs, setActLogs] = useState([]);
     const [actLoading, setActLoading] = useState(false);
-    const [actDate, setActDate]   = useState(new Date().toISOString().split('T')[0]);
+    const [actDate, setActDate] = useState(new Date().toISOString().split('T')[0]);
     const [actFilter, setActFilter] = useState('');
     const [actTotal, setActTotal] = useState(0);
 
@@ -2228,7 +2228,7 @@ function ActivityLogPanel({ actDate, setActDate, actFilter, setActFilter, actLog
     };
 
     const FILTER_ACTIONS = ['', 'AUTO_CANCEL_NO_SHOW', 'LATE_WARNING_SENT', 'CANCEL_APPOINTMENT', 'CREATE_APPOINTMENT', 'COMPLETE_APPOINTMENT', 'LOGIN'];
-    const FILTER_LABELS  = ['Tất cả', 'Auto hủy', 'Cảnh báo trễ', 'Hủy lịch', 'Tạo lịch', 'Hoàn tất', 'Đăng nhập'];
+    const FILTER_LABELS = ['Tất cả', 'Auto hủy', 'Cảnh báo trễ', 'Hủy lịch', 'Tạo lịch', 'Hoàn tất', 'Đăng nhập'];
 
     return (
         <div style={{ padding: '24px' }}>
@@ -2242,10 +2242,12 @@ function ActivityLogPanel({ actDate, setActDate, actFilter, setActFilter, actLog
                 <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                     {FILTER_ACTIONS.map((a, i) => (
                         <button key={a} onClick={() => setActFilter(a)}
-                            style={{ padding: '6px 14px', borderRadius: '20px', border: '1.5px solid', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
+                            style={{
+                                padding: '6px 14px', borderRadius: '20px', border: '1.5px solid', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
                                 borderColor: actFilter === a ? 'var(--primary)' : '#e2e8f0',
                                 background: actFilter === a ? 'var(--primary)' : 'white',
-                                color: actFilter === a ? 'white' : 'var(--text-muted)' }}>
+                                color: actFilter === a ? 'white' : 'var(--text-muted)'
+                            }}>
                             {FILTER_LABELS[i]}
                         </button>
                     ))}

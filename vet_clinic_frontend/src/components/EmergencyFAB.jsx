@@ -23,7 +23,7 @@ const EmergencyFAB = () => {
     const fetchDutyStaff = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.get('http://localhost:5000/api/v1/hrm/duty-staff', {
+            const res = await axios.get('https://vet-clinic-1j57.onrender.com/api/v1/hrm/duty-staff', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -39,7 +39,7 @@ const EmergencyFAB = () => {
     const fetchAllDoctors = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.get('http://localhost:5000/api/v1/users?role=DOCTOR', {
+            const res = await axios.get('https://vet-clinic-1j57.onrender.com/api/v1/users?role=DOCTOR', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {

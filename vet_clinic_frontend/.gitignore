@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Exclude binaries and large executables
+ngrok.exe
+*.exe
+

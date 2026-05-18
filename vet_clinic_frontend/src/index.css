@@ -245,8 +245,13 @@ a {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Premium Buttons & Icons */
@@ -424,8 +429,10 @@ a {
   background-color: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  display: grid; /* Dùng Grid thay vì Flex để căn giữa chuẩn hơn */
-  place-items: center; /* Căn giữa cả 2 chiều Tuyệt đối */
+  display: grid;
+  /* Dùng Grid thay vì Flex để căn giữa chuẩn hơn */
+  place-items: center;
+  /* Căn giữa cả 2 chiều Tuyệt đối */
   z-index: 10000;
   padding: 20px;
   overflow-y: auto;
@@ -445,7 +452,8 @@ a {
   flex-direction: column;
   overflow: visible;
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  margin: 0; /* Xóa margin auto để không xung đột với place-items */
+  margin: 0;
+  /* Xóa margin auto để không xung đột với place-items */
 }
 
 /* Nút đóng modal luôn nằm góc trên bên phải */
@@ -454,7 +462,7 @@ a {
   top: 14px;
   right: 14px;
   z-index: 10;
-  background: rgba(255,255,255,0.85);
+  background: rgba(255, 255, 255, 0.85);
   border: 1px solid #e2e8f0;
   border-radius: 50%;
   width: 32px;
@@ -465,7 +473,7 @@ a {
   cursor: pointer;
   color: #475569;
   transition: all 0.2s;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .modal-close-btn:hover {
@@ -1314,6 +1322,7 @@ body.modal-open {
 .schedule-row:hover td {
   background-color: #f8fafc !important;
 }
+
 .schedule-row:hover td:first-child {
   background-color: #f1f5f9 !important;
 }

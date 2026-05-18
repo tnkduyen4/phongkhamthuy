@@ -13,8 +13,8 @@ import { API } from '../constants';
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
     iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
-    iconUrl:       'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-    shadowUrl:     'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 });
 
 const getToken = () => sessionStorage.getItem('token');
@@ -43,9 +43,9 @@ const MapFlyTo = ({ lat, lng }) => {
 const ClinicSettings = () => {
     const { showToast } = useToast();
     const { showConfirm } = useConfirm();
-    const [loading,  setLoading]  = useState(true);
-    const [saving,   setSaving]   = useState(false);
-    const [config,   setConfig]   = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [config, setConfig] = useState(null);
     const [hrmConfigs, setHrmConfigs] = useState([]);
     const [locating, setLocating] = useState(false);
 
@@ -64,9 +64,9 @@ const ClinicSettings = () => {
                 commissionServiceRate: (c.commissionServiceRate || 0) * 100,
                 commissionMedicineRate: (c.commissionMedicineRate || 0) * 100,
             })));
-        } catch (err) { 
+        } catch (err) {
             console.error(err);
-            showToast('Không tải được cấu hình hệ thống.', 'error'); 
+            showToast('Không tải được cấu hình hệ thống.', 'error');
         } finally { setLoading(false); }
     };
 
@@ -88,7 +88,7 @@ const ClinicSettings = () => {
                 }));
                 await axios.put(`${API}/hrm/configs/all`, { configs: parsedHrm }, { headers: authHeader() });
                 showToast('Đã lưu cấu hình Lương & Hoa Hồng!', 'success');
-            } catch (err) { showToast(err.response?.data?.message || 'Lưu thất bại.', 'error'); } 
+            } catch (err) { showToast(err.response?.data?.message || 'Lưu thất bại.', 'error'); }
             finally { setSaving(false); }
         });
     };
@@ -99,7 +99,7 @@ const ClinicSettings = () => {
             try {
                 await axios.put(`${API}/attendance/config`, config, { headers: authHeader() });
                 showToast('Đã lưu cấu hình hệ thống!', 'success');
-            } catch (err) { showToast(err.response?.data?.message || 'Lưu thất bại.', 'error'); } 
+            } catch (err) { showToast(err.response?.data?.message || 'Lưu thất bại.', 'error'); }
             finally { setSaving(false); }
         });
     };
@@ -142,7 +142,7 @@ const ClinicSettings = () => {
         );
     };
 
-    const setLoc   = (key, val) => setConfig(p => ({ ...p, location: { ...p.location, [key]: parseFloat(val) || 0 } }));
+    const setLoc = (key, val) => setConfig(p => ({ ...p, location: { ...p.location, [key]: parseFloat(val) || 0 } }));
     const setShift = (sh, key, val) => setConfig(p => ({ ...p, shifts: { ...p.shifts, [sh]: { ...p.shifts[sh], [key]: val } } }));
 
     if (loading || !config) return (
@@ -171,8 +171,13 @@ const ClinicSettings = () => {
                     {/* Nút lưu chung bị loại bỏ để khuyến khích lưu riêng từng phần */}
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: '24px', alignItems: 'start' }}>
-                    
+                <div className="settings-grid" style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', 
+                    gap: '24px', 
+                    alignItems: 'start' 
+                }}>
+
                     {/* LEFT COLUMN: Map & Basic Info */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                         {/* GPS Location Card */}
@@ -243,8 +248,8 @@ const ClinicSettings = () => {
                                     {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} Lưu Lương
                                 </button>
                             </div>
-                            
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
                                 {hrmConfigs.filter(c => c.role !== 'DEFAULT' && c.role !== 'ADMIN').map(cfg => {
                                     const roleMap = {
                                         DOCTOR: { label: 'Bác Sĩ', color: '#16a34a', bg: '#f0fdf4' },
@@ -292,7 +297,7 @@ const ClinicSettings = () => {
 
                     {/* RIGHT COLUMN: Shifts & Rules */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                        
+
                         {/* Shift Times Card */}
                         <div className="glass-card" style={{ padding: '24px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>

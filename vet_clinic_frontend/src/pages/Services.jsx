@@ -34,7 +34,7 @@ const Services = () => {
     const fetchServices = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await axios.get('http://localhost:5000/api/v1/services', {
+            const res = await axios.get('https://vet-clinic-1j57.onrender.com/api/v1/services', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -99,8 +99,8 @@ const Services = () => {
         try {
             const token = sessionStorage.getItem('token');
             const url = editingId
-                ? `http://localhost:5000/api/v1/services/${editingId}`
-                : 'http://localhost:5000/api/v1/services';
+                ? `https://vet-clinic-1j57.onrender.com/api/v1/services/${editingId}`
+                : 'https://vet-clinic-1j57.onrender.com/api/v1/services';
             const method = editingId ? 'put' : 'post';
 
             const res = await axios[method](url, {
@@ -128,7 +128,7 @@ const Services = () => {
     const handleDelete = async (id) => {
         try {
             const token = sessionStorage.getItem('token');
-            const checkRes = await axios.get(`http://localhost:5000/api/v1/services/${id}/check-delete`, {
+            const checkRes = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/services/${id}/check-delete`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -138,7 +138,7 @@ const Services = () => {
                     'Dịch vụ này đã có dữ liệu sử dụng trên hệ thống (Lịch hẹn, Hóa đơn...).\n\nBạn có muốn NGỪNG CUNG CẤP dịch vụ này không? Dịch vụ sẽ bị ẩn khỏi bảng giá mới nhưng mọi lịch sử vẫn được bảo toàn.',
                     async () => {
                         try {
-                            await axios.delete(`http://localhost:5000/api/v1/services/${id}`, {
+                            await axios.delete(`https://vet-clinic-1j57.onrender.com/api/v1/services/${id}`, {
                                 headers: { Authorization: `Bearer ${token}` }
                             });
                             showToast('Đã ngừng cung cấp dịch vụ.', 'success');
@@ -154,7 +154,7 @@ const Services = () => {
                     'Dịch vụ này chưa từng được sử dụng trong hệ thống.\n\nBạn có chắc chắn muốn XÓA VĨNH VIỄN không?',
                     async () => {
                         try {
-                            await axios.delete(`http://localhost:5000/api/v1/services/${id}?force=true`, {
+                            await axios.delete(`https://vet-clinic-1j57.onrender.com/api/v1/services/${id}?force=true`, {
                                 headers: { Authorization: `Bearer ${token}` }
                             });
                             showToast('Đã xóa vĩnh viễn dịch vụ.', 'success');
@@ -194,10 +194,10 @@ const Services = () => {
 
             {/* Tabs Phân loại dịch vụ */}
             <div style={{ display: 'flex', gap: '8px', marginBottom: '24px' }}>
-                <button 
-                    className="btn" 
+                <button
+                    className="btn"
                     onClick={() => setActiveCategory('MEDICAL')}
-                    style={{ 
+                    style={{
                         background: activeCategory === 'MEDICAL' ? 'var(--primary)' : 'white',
                         color: activeCategory === 'MEDICAL' ? 'white' : 'var(--text-main)',
                         border: '1px solid var(--primary)',
@@ -206,10 +206,10 @@ const Services = () => {
                 >
                     <Stethoscope size={18} /> Y TẾ / KHÁM BỆNH
                 </button>
-                <button 
-                    className="btn" 
+                <button
+                    className="btn"
                     onClick={() => setActiveCategory('GROOMING')}
-                    style={{ 
+                    style={{
                         background: activeCategory === 'GROOMING' ? '#ec4899' : 'white',
                         color: activeCategory === 'GROOMING' ? 'white' : 'var(--text-main)',
                         border: '1px solid #ec4899',
@@ -218,10 +218,10 @@ const Services = () => {
                 >
                     <Sparkles size={18} /> GROOMING / LÀM ĐẸP
                 </button>
-                <button 
-                    className="btn" 
+                <button
+                    className="btn"
                     onClick={() => setActiveCategory('SURCHARGE')}
-                    style={{ 
+                    style={{
                         background: activeCategory === 'SURCHARGE' ? '#f59e0b' : 'white',
                         color: activeCategory === 'SURCHARGE' ? 'white' : 'var(--text-main)',
                         border: '1px solid #f59e0b',
@@ -269,9 +269,9 @@ const Services = () => {
                                         <td style={{ padding: '16px 24px' }} data-label="Hạng Mục">
                                             <div className="flex-y-center" style={{ gap: '8px' }}>
                                                 {svc.type === 'MEDICAL' ? <Stethoscope size={16} color="var(--primary)" /> : svc.type === 'GROOMING' ? <Sparkles size={16} color="#ec4899" /> : <Plus size={16} color="#f59e0b" />}
-                                                <span style={{ 
-                                                    fontWeight: 600, 
-                                                    color: svc.type === 'MEDICAL' ? 'var(--primary)' : svc.type === 'GROOMING' ? '#ec4899' : '#f59e0b' 
+                                                <span style={{
+                                                    fontWeight: 600,
+                                                    color: svc.type === 'MEDICAL' ? 'var(--primary)' : svc.type === 'GROOMING' ? '#ec4899' : '#f59e0b'
                                                 }}>
                                                     {svc.type === 'MEDICAL' ? 'Y TẾ / KHÁM BỆNH' : svc.type === 'GROOMING' ? 'GROOMING / LÀM ĐẸP' : 'PHỤ PHÍ / KHÁC'}
                                                 </span>

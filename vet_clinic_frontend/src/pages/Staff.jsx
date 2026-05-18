@@ -16,7 +16,7 @@ import {
     History, Activity, ArrowRight, ArrowLeft, Save, RefreshCw, Printer, ScanFace, Loader2, Eye, EyeOff, Lock
 } from 'lucide-react';
 
-const API = 'http://localhost:5000/api/v1';
+const API = 'https://vet-clinic-1j57.onrender.com/api/v1';
 const getToken = () => sessionStorage.getItem('token');
 const authHeader = () => ({ Authorization: `Bearer ${getToken()}` });
 
@@ -333,7 +333,7 @@ const Staff = () => {
     // ─────────────────────────────────────────────────────
     const fetchStaffList = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/v1/users?includeInactive=true&includePhotos=true', { headers: authHeader() });
+            const res = await axios.get('https://vet-clinic-1j57.onrender.com/api/v1/users?includeInactive=true&includePhotos=true', { headers: authHeader() });
             if (res.data.success) {
                 setStaffList(res.data.data.filter(u => u.role !== 'CUSTOMER'));
                 setSelectedStaffIds([]);
@@ -363,7 +363,7 @@ const Staff = () => {
                 }),
                 axios.get(`${API}/hrm/leaves`, { headers: authHeader() }),
                 // Lấy dữ liệu chấm công cho cùng khoảng ngày
-                axios.get(`http://localhost:5000/api/v1/attendance/all`, {
+                axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/attendance/all`, {
                     params: { startDate: extStart.toISOString().split('T')[0], endDate: extEnd.toISOString().split('T')[0] },
                     headers: authHeader()
                 }).catch(() => ({ data: { success: false } })) // không block nếu attendance lỗi
@@ -486,7 +486,7 @@ const Staff = () => {
             if (activeTab === 'schedules') {
                 await fetchScheduleData(false);
             } else if (activeTab === 'leaves') {
-                const leaveRes = await axios.get(`http://localhost:5000/api/v1/hrm/leaves`, { headers: authHeader() });
+                const leaveRes = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/hrm/leaves`, { headers: authHeader() });
                 if (leaveRes.data.success) setLeaves(leaveRes.data.data);
             } else if (activeTab === 'payroll') {
                 await fetchPayrollData(payrollMonth, payrollYear);
@@ -531,7 +531,7 @@ const Staff = () => {
                         setStaffList(list);
                         doOpen(list);
                     }
-                }).catch(() => {});
+                }).catch(() => { });
             }
         };
         window.addEventListener('openFaceApproval', handleOpenFaceApproval);
@@ -698,7 +698,7 @@ const Staff = () => {
         try {
             const res = await axios.get(`${API}/users/${id}/check-delete`, { headers: authHeader() });
             setSubmitLoading(false);
-            
+
             if (res.data.hasRelations) {
                 // Có dữ liệu liên kết -> Bắt buộc khóa tạm thời (soft delete)
                 const rels = res.data.relations;
@@ -1014,7 +1014,7 @@ const Staff = () => {
 
     const updateLeaveStatus = async (id, status) => {
         try {
-            await axios.put(`http://localhost:5000/api/v1/hrm/leaves/${id}`, { status }, { headers: authHeader() });
+            await axios.put(`https://vet-clinic-1j57.onrender.com/api/v1/hrm/leaves/${id}`, { status }, { headers: authHeader() });
             fetchData();
             showToast(`Đã ${status === 'APPROVED' ? 'phê duyệt' : 'từ chối'} đơn nghỉ`);
         } catch (error) { showToast('Lỗi phê duyệt', 'error'); }
@@ -1078,7 +1078,7 @@ const Staff = () => {
                 try {
                     if (isTargeted) {
                         for (const id of selectedCalcIds) {
-                            await axios.delete(`${API}/hrm/payrolls/month?month=${m}&year=${y}&staffId=${id}`, { headers: authHeader() }).catch(()=>null);
+                            await axios.delete(`${API}/hrm/payrolls/month?month=${m}&year=${y}&staffId=${id}`, { headers: authHeader() }).catch(() => null);
                         }
                         const res = await axios.post(`${API}/hrm/payrolls/generate`, {
                             month: m, year: y, staffIds: selectedCalcIds
@@ -1159,10 +1159,10 @@ const Staff = () => {
                 ${row('Số ngày làm việc thực tế', `${py.workingDays || 0} ngày`)}
                 ${row('Tổng giờ làm việc', `${py.totalHoursWorked || 0}h`)}
                 ${row('Đơn giá giờ', (() => {
-                    if (py.hourlyRate > 0) return `${fmt(py.hourlyRate)}đ/h`;
-                    const m2 = (py.note || '').match(/×\s*([\d.,]+)đ\/h/);
-                    return m2 ? `${m2[1]}đ/h` : '—';
-                })())}
+            if (py.hourlyRate > 0) return `${fmt(py.hourlyRate)}đ/h`;
+            const m2 = (py.note || '').match(/×\s*([\d.,]+)đ\/h/);
+            return m2 ? `${m2[1]}đ/h` : '—';
+        })())}
 
                 ${section('II. Khoản thu nhập')}
                 ${row('1. Lương cơ bản', `${fmt(py.baseSalary)}đ`)}
@@ -1267,7 +1267,7 @@ const Staff = () => {
         if (diff !== 0) return diff;
         const dateA = new Date(a.createdAt || a.hireDate || 0).getTime();
         const dateB = new Date(b.createdAt || b.hireDate || 0).getTime();
-        return dateA - dateB; 
+        return dateA - dateB;
     });
 
     const filteredStaffList = sortedStaffList.filter(s => (s.fullName || '').toLowerCase().includes(searchQuery.toLowerCase()) || (s.phoneNumber || '').includes(searchQuery));
@@ -1374,8 +1374,8 @@ const Staff = () => {
                                 <thead>
                                     <tr style={{ background: '#f8fafc' }}>
                                         <th style={{ padding: '16px 16px', width: '40px', textAlign: 'center' }}>
-                                            <input 
-                                                type="checkbox" 
+                                            <input
+                                                type="checkbox"
                                                 style={{ width: '16px', height: '16px', cursor: 'pointer' }}
                                                 onChange={(e) => {
                                                     if (e.target.checked) setSelectedStaffIds(filteredStaffList.map(s => s._id));
@@ -1395,8 +1395,8 @@ const Staff = () => {
                                     {filteredStaffList.map(s => (
                                         <tr key={s._id} style={{ borderBottom: '1px solid #f1f5f9', transition: 'background 0.2s' }} className="hover-row">
                                             <td style={{ padding: '16px 16px', textAlign: 'center' }} data-label="Bật/Tắt Chọn" onClick={(e) => e.stopPropagation()}>
-                                                <input 
-                                                    type="checkbox" 
+                                                <input
+                                                    type="checkbox"
                                                     style={{ width: '16px', height: '16px', cursor: 'pointer' }}
                                                     checked={selectedStaffIds.includes(s._id)}
                                                     onChange={(e) => {
@@ -2087,8 +2087,8 @@ const Staff = () => {
                                             <thead style={{ background: '#f8fafc' }}>
                                                 <tr>
                                                     <th style={{ padding: '11px 14px', textAlign: 'center', width: '40px' }}>
-                                                        <input 
-                                                            type="checkbox" 
+                                                        <input
+                                                            type="checkbox"
                                                             style={{ cursor: 'pointer', width: '15px', height: '15px' }}
                                                             checked={selectedCalcIds.length > 0 && selectedCalcIds.length === payrolls.length + uncalculatedStaff.length}
                                                             onChange={e => setSelectedCalcIds(e.target.checked ? [...payrolls, ...uncalculatedStaff].map(s => s.staffId?._id || s._id) : [])}
@@ -2110,67 +2110,67 @@ const Staff = () => {
                                                         return (a.staffId?.fullName || '').localeCompare(b.staffId?.fullName || '', 'vi');
                                                     })
                                                     .map(py => {
-                                                    const nm = py.note || '';
-                                                    return (
-                                                        <tr key={py._id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                                                            <td style={{ padding: '12px 14px', textAlign: 'center' }}>
-                                                                <input 
-                                                                    type="checkbox" 
-                                                                    style={{ cursor: 'pointer', width: '15px', height: '15px' }}
-                                                                    checked={selectedCalcIds.includes(py.staffId?._id || py.staffId)}
-                                                                    onChange={e => {
-                                                                        const id = py.staffId?._id || py.staffId;
-                                                                        setSelectedCalcIds(prev => e.target.checked ? [...prev, id] : prev.filter(x => x !== id));
-                                                                    }}
-                                                                />
-                                                            </td>
-                                                            <td style={{ padding: '12px 14px' }}>
-                                                                <div style={{ fontWeight: 700, fontSize: '0.88rem' }}>{py.staffId?.fullName}</div>
-                                                                <div style={{ fontSize: '0.68rem', color: '#94a3b8' }}>{py.staffId?.role}</div>
-                                                            </td>
-                                                            <td style={{ padding: '12px 14px' }}>
-                                                                <div style={{ fontSize: '0.82rem', fontWeight: 600 }}>{py.workingDays || 0} n.công</div>
-                                                                <div style={{ fontSize: '0.68rem', color: '#94a3b8' }}>{py.totalHoursWorked || nm.match(/[\d.]+h/)?.[0] || '0h'} làm việc</div>
-                                                            </td>
-                                                            <td style={{ padding: '12px 14px' }}>
-                                                                <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>{py.baseSalary?.toLocaleString('vi-VN')}đ</div>
-                                                                <div style={{ fontSize: '0.66rem', color: '#94a3b8' }}>
-                                                                    {py.hourlyRate > 0
-                                                                        ? `${py.hourlyRate.toLocaleString('vi-VN')}đ/h`
-                                                                        : (py.note?.match(/×\s*([\d.,]+)đ\/h/)?.[1]
-                                                                            ? `${py.note.match(/×\s*([\d.,]+)đ\/h/)[1]}đ/h`
-                                                                            : '—')
-                                                                    }
-                                                                </div>
-                                                            </td>
-                                                            <td style={{ padding: '12px 14px', fontSize: '0.82rem', color: '#10b981', fontWeight: 600 }}>{py.commissions > 0 ? `+${py.commissions?.toLocaleString('vi-VN')}đ` : '—'}</td>
-                                                            <td style={{ padding: '12px 14px', fontSize: '0.82rem', color: '#6366f1', fontWeight: 600 }}>{py.bonus > 0 ? `+${py.bonus?.toLocaleString('vi-VN')}đ` : '—'}</td>
-                                                            <td style={{ padding: '12px 14px', fontSize: '0.82rem', color: '#ef4444' }}>
-                                                                {py.deductions > 0 ? (
-                                                                    <span title={nm.includes('Trễ') || nm.includes('Nghỉ') ? nm : ''}>−{py.deductions?.toLocaleString('vi-VN')}đ</span>
-                                                                ) : '—'}
-                                                            </td>
-                                                            <td style={{ padding: '12px 14px', fontWeight: 800, color: '#0f172a', fontSize: '0.95rem', whiteSpace: 'nowrap' }}>{py.totalSalary?.toLocaleString('vi-VN')}đ</td>
-                                                            <td style={{ padding: '12px 14px' }}>
-                                                                <span style={{ background: '#fef9c3', color: '#92400e', borderRadius: '20px', padding: '3px 10px', fontSize: '0.68rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
-                                                                    ✓ Đã chốt
-                                                                </span>
-                                                            </td>
-                                                            <td style={{ padding: '8px 14px' }}>
-                                                                <div style={{ display: 'flex', gap: '6px' }}>
-                                                                    <button onClick={() => setPayrollDetailModal(py)}
-                                                                        style={{ padding: '5px 9px', borderRadius: '7px', border: '1px solid #d1fae5', background: '#ecfdf5', color: '#059669', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '3px', fontSize: '0.72rem', fontWeight: 700 }}
-                                                                        title="Xem chi tiết bảng lương"
-                                                                    >
-                                                                        <Eye size={13} /> Chi tiết
-                                                                    </button>
-                                                                    <button onClick={() => handlePrintPayslip(py)} style={{ padding: '5px', borderRadius: '7px', border: '1px solid #bfdbfe', background: '#eff6ff', color: '#2563eb', cursor: 'pointer' }} title="In phiếu lương"><Printer size={13} /></button>
-                                                                    <button onClick={() => handleOpenEditPayroll(py)} style={{ padding: '5px', borderRadius: '7px', border: '1px solid #e2e8f0', background: '#f8fafc', color: '#64748b', cursor: 'pointer' }} title="Điều chỉnh"><Pencil size={13} /></button>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    );
-                                                })}
+                                                        const nm = py.note || '';
+                                                        return (
+                                                            <tr key={py._id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                                                                <td style={{ padding: '12px 14px', textAlign: 'center' }}>
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        style={{ cursor: 'pointer', width: '15px', height: '15px' }}
+                                                                        checked={selectedCalcIds.includes(py.staffId?._id || py.staffId)}
+                                                                        onChange={e => {
+                                                                            const id = py.staffId?._id || py.staffId;
+                                                                            setSelectedCalcIds(prev => e.target.checked ? [...prev, id] : prev.filter(x => x !== id));
+                                                                        }}
+                                                                    />
+                                                                </td>
+                                                                <td style={{ padding: '12px 14px' }}>
+                                                                    <div style={{ fontWeight: 700, fontSize: '0.88rem' }}>{py.staffId?.fullName}</div>
+                                                                    <div style={{ fontSize: '0.68rem', color: '#94a3b8' }}>{py.staffId?.role}</div>
+                                                                </td>
+                                                                <td style={{ padding: '12px 14px' }}>
+                                                                    <div style={{ fontSize: '0.82rem', fontWeight: 600 }}>{py.workingDays || 0} n.công</div>
+                                                                    <div style={{ fontSize: '0.68rem', color: '#94a3b8' }}>{py.totalHoursWorked || nm.match(/[\d.]+h/)?.[0] || '0h'} làm việc</div>
+                                                                </td>
+                                                                <td style={{ padding: '12px 14px' }}>
+                                                                    <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0f172a' }}>{py.baseSalary?.toLocaleString('vi-VN')}đ</div>
+                                                                    <div style={{ fontSize: '0.66rem', color: '#94a3b8' }}>
+                                                                        {py.hourlyRate > 0
+                                                                            ? `${py.hourlyRate.toLocaleString('vi-VN')}đ/h`
+                                                                            : (py.note?.match(/×\s*([\d.,]+)đ\/h/)?.[1]
+                                                                                ? `${py.note.match(/×\s*([\d.,]+)đ\/h/)[1]}đ/h`
+                                                                                : '—')
+                                                                        }
+                                                                    </div>
+                                                                </td>
+                                                                <td style={{ padding: '12px 14px', fontSize: '0.82rem', color: '#10b981', fontWeight: 600 }}>{py.commissions > 0 ? `+${py.commissions?.toLocaleString('vi-VN')}đ` : '—'}</td>
+                                                                <td style={{ padding: '12px 14px', fontSize: '0.82rem', color: '#6366f1', fontWeight: 600 }}>{py.bonus > 0 ? `+${py.bonus?.toLocaleString('vi-VN')}đ` : '—'}</td>
+                                                                <td style={{ padding: '12px 14px', fontSize: '0.82rem', color: '#ef4444' }}>
+                                                                    {py.deductions > 0 ? (
+                                                                        <span title={nm.includes('Trễ') || nm.includes('Nghỉ') ? nm : ''}>−{py.deductions?.toLocaleString('vi-VN')}đ</span>
+                                                                    ) : '—'}
+                                                                </td>
+                                                                <td style={{ padding: '12px 14px', fontWeight: 800, color: '#0f172a', fontSize: '0.95rem', whiteSpace: 'nowrap' }}>{py.totalSalary?.toLocaleString('vi-VN')}đ</td>
+                                                                <td style={{ padding: '12px 14px' }}>
+                                                                    <span style={{ background: '#fef9c3', color: '#92400e', borderRadius: '20px', padding: '3px 10px', fontSize: '0.68rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                                                                        ✓ Đã chốt
+                                                                    </span>
+                                                                </td>
+                                                                <td style={{ padding: '8px 14px' }}>
+                                                                    <div style={{ display: 'flex', gap: '6px' }}>
+                                                                        <button onClick={() => setPayrollDetailModal(py)}
+                                                                            style={{ padding: '5px 9px', borderRadius: '7px', border: '1px solid #d1fae5', background: '#ecfdf5', color: '#059669', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '3px', fontSize: '0.72rem', fontWeight: 700 }}
+                                                                            title="Xem chi tiết bảng lương"
+                                                                        >
+                                                                            <Eye size={13} /> Chi tiết
+                                                                        </button>
+                                                                        <button onClick={() => handlePrintPayslip(py)} style={{ padding: '5px', borderRadius: '7px', border: '1px solid #bfdbfe', background: '#eff6ff', color: '#2563eb', cursor: 'pointer' }} title="In phiếu lương"><Printer size={13} /></button>
+                                                                        <button onClick={() => handleOpenEditPayroll(py)} style={{ padding: '5px', borderRadius: '7px', border: '1px solid #e2e8f0', background: '#f8fafc', color: '#64748b', cursor: 'pointer' }} title="Điều chỉnh"><Pencil size={13} /></button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        );
+                                                    })}
                                                 {/* Chưa tính lương */}
                                                 {uncalculatedStaff
                                                     .filter(s => !searchQuery || s.fullName?.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -2181,40 +2181,40 @@ const Staff = () => {
                                                         return (a.fullName || '').localeCompare(b.fullName || '', 'vi');
                                                     })
                                                     .map((s, i) => (
-                                                    <tr key={`u${i}`} style={{ borderBottom: '1px solid #f1f5f9', background: '#f8fafc' }}>
-                                                        <td style={{ padding: '12px 14px', textAlign: 'center' }}>
-                                                            <input 
-                                                                type="checkbox" 
-                                                                style={{ cursor: 'pointer', width: '15px', height: '15px' }}
-                                                                checked={selectedCalcIds.includes(s._id)}
-                                                                onChange={e => {
-                                                                    setSelectedCalcIds(prev => e.target.checked ? [...prev, s._id] : prev.filter(x => x !== s._id));
-                                                                }}
-                                                            />
-                                                        </td>
-                                                        <td style={{ padding: '12px 14px' }}>
-                                                            <div style={{ fontWeight: 700, fontSize: '0.88rem' }}>{s.fullName}</div>
-                                                            <div style={{ fontSize: '0.68rem', color: '#94a3b8' }}>{s.role}</div>
-                                                        </td>
-                                                        <td colSpan={6} style={{ padding: '12px 14px', textAlign: 'center', color: '#94a3b8', fontSize: '0.82rem' }}>
-                                                            Chưa có dữ liệu lương. Vui lòng bấm "Tính lương" để tạo.
-                                                        </td>
-                                                        <td style={{ padding: '12px 14px' }}>
-                                                            <span style={{ background: '#fefce8', color: '#b45309', borderRadius: '20px', padding: '3px 10px', fontSize: '0.68rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
-                                                                ⚠️ Chưa tính
-                                                            </span>
-                                                        </td>
-                                                        <td style={{ padding: '8px 14px' }}>
-                                                            <button
-                                                                onClick={() => calculateSinglePayroll(s._id)}
-                                                                disabled={submitLoading}
-                                                                style={{ padding: '5px 9px', borderRadius: '7px', border: '1px solid #bfdbfe', background: '#eff6ff', color: '#2563eb', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 700 }}
-                                                            >
-                                                                <RefreshCw size={13} className={submitLoading ? 'animate-spin' : ''} /> Tính lương
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                ))}
+                                                        <tr key={`u${i}`} style={{ borderBottom: '1px solid #f1f5f9', background: '#f8fafc' }}>
+                                                            <td style={{ padding: '12px 14px', textAlign: 'center' }}>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    style={{ cursor: 'pointer', width: '15px', height: '15px' }}
+                                                                    checked={selectedCalcIds.includes(s._id)}
+                                                                    onChange={e => {
+                                                                        setSelectedCalcIds(prev => e.target.checked ? [...prev, s._id] : prev.filter(x => x !== s._id));
+                                                                    }}
+                                                                />
+                                                            </td>
+                                                            <td style={{ padding: '12px 14px' }}>
+                                                                <div style={{ fontWeight: 700, fontSize: '0.88rem' }}>{s.fullName}</div>
+                                                                <div style={{ fontSize: '0.68rem', color: '#94a3b8' }}>{s.role}</div>
+                                                            </td>
+                                                            <td colSpan={6} style={{ padding: '12px 14px', textAlign: 'center', color: '#94a3b8', fontSize: '0.82rem' }}>
+                                                                Chưa có dữ liệu lương. Vui lòng bấm "Tính lương" để tạo.
+                                                            </td>
+                                                            <td style={{ padding: '12px 14px' }}>
+                                                                <span style={{ background: '#fefce8', color: '#b45309', borderRadius: '20px', padding: '3px 10px', fontSize: '0.68rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                                                                    ⚠️ Chưa tính
+                                                                </span>
+                                                            </td>
+                                                            <td style={{ padding: '8px 14px' }}>
+                                                                <button
+                                                                    onClick={() => calculateSinglePayroll(s._id)}
+                                                                    disabled={submitLoading}
+                                                                    style={{ padding: '5px 9px', borderRadius: '7px', border: '1px solid #bfdbfe', background: '#eff6ff', color: '#2563eb', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 700 }}
+                                                                >
+                                                                    <RefreshCw size={13} className={submitLoading ? 'animate-spin' : ''} /> Tính lương
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
                                                 {payrolls.length === 0 && uncalculatedStaff.length === 0 && (
                                                     <tr><td colSpan={9} style={{ padding: '40px', textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem' }}>
                                                         Chưa có dữ liệu lương tháng này
@@ -2321,7 +2321,7 @@ const Staff = () => {
                         </form>
                     </div>
                 </div>
-            , document.body)}
+                , document.body)}
 
             {/* Modal Phân ca trực */}
             {isScheduleModalOpen && createPortal(
@@ -2389,7 +2389,7 @@ const Staff = () => {
                         </form>
                     </div>
                 </div>
-            , document.body)}
+                , document.body)}
 
             {/* Modal Đơn nghỉ phép */}
             {isLeaveModalOpen && createPortal(
@@ -2432,7 +2432,7 @@ const Staff = () => {
                         </form>
                     </div>
                 </div>
-            , document.body)}
+                , document.body)}
 
             {/* ===== Confirm Dialog ===== */}
             {confirmDialog && createPortal(
@@ -2468,7 +2468,7 @@ const Staff = () => {
                         </div>
                     </div>
                 </div>
-            , document.body)}
+                , document.body)}
 
 
             {/* Toast Thông báo — góc trên bên phải, dưới thanh header */}
@@ -2487,18 +2487,16 @@ const Staff = () => {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '12px',
-                    border: `1px solid ${
-                        toast.type === 'error' ? '#fecaca'
-                        : toast.type === 'warning' ? '#fef3c7'
-                        : toast.type === 'info' ? '#bfdbfe'
-                        : '#bbf7d0'
-                    }`,
-                    borderLeft: `6px solid ${
-                        toast.type === 'error' ? '#ef4444'
-                        : toast.type === 'warning' ? '#7e22ce'
-                        : toast.type === 'info' ? '#3b82f6'
-                        : '#22c55e'
-                    }`,
+                    border: `1px solid ${toast.type === 'error' ? '#fecaca'
+                            : toast.type === 'warning' ? '#fef3c7'
+                                : toast.type === 'info' ? '#bfdbfe'
+                                    : '#bbf7d0'
+                        }`,
+                    borderLeft: `6px solid ${toast.type === 'error' ? '#ef4444'
+                            : toast.type === 'warning' ? '#7e22ce'
+                                : toast.type === 'info' ? '#3b82f6'
+                                    : '#22c55e'
+                        }`,
                     animation: 'toastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                     minWidth: '300px',
                     maxWidth: '420px',
@@ -2523,9 +2521,9 @@ const Staff = () => {
                             marginBottom: '2px'
                         }}>
                             {toast.type === 'success' ? '✅ Thành công'
-                             : toast.type === 'error' ? '❌ Lỗi hệ thống'
-                             : toast.type === 'info' ? '⏳ Đang xử lý'
-                             : '⚠️ Thông báo'}
+                                : toast.type === 'error' ? '❌ Lỗi hệ thống'
+                                    : toast.type === 'info' ? '⏳ Đang xử lý'
+                                        : '⚠️ Thông báo'}
                         </div>
                         <div style={{ color: '#4b5563', fontSize: '0.83rem', lineHeight: 1.5, whiteSpace: 'pre-line' }}>
                             {toast.message}
@@ -2685,7 +2683,7 @@ const Staff = () => {
                         </div>
                     </div>
                 </div>
-            , document.body)}
+                , document.body)}
             {/* Modal Điều Chỉnh Lương Thủ Công (Bonus/Deductions) */}
             {isEditPayrollModalOpen && selectedPayroll && (
                 <div className="modal-overlay" style={{ zIndex: 5000 }}>
@@ -2949,13 +2947,13 @@ const Staff = () => {
                                                     return (
                                                         <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
                                                             <div style={{ flexShrink: 0, width: '90px' }}>
-                                                                <span style={{ 
+                                                                <span style={{
                                                                     display: 'inline-block',
-                                                                    background: isAdd ? '#dcfce7' : '#fee2e2', 
-                                                                    color: isAdd ? '#16a34a' : '#dc2626', 
-                                                                    fontWeight: 700, 
-                                                                    fontSize: '0.7rem', 
-                                                                    padding: '4px 8px', 
+                                                                    background: isAdd ? '#dcfce7' : '#fee2e2',
+                                                                    color: isAdd ? '#16a34a' : '#dc2626',
+                                                                    fontWeight: 700,
+                                                                    fontSize: '0.7rem',
+                                                                    padding: '4px 8px',
                                                                     borderRadius: '6px',
                                                                     textDecoration: isAdd ? 'none' : 'line-through'
                                                                 }}>
@@ -3423,7 +3421,7 @@ const RejectReasonInput = ({ onReject, onApprove, loading, pendingPhoto, analysi
                         flex: 2, padding: '10px', borderRadius: '10px', border: 'none',
                         background: !pendingPhoto || loading ? '#94a3b8'
                             : isRiskyApproval ? 'linear-gradient(135deg, #dc2626, #b91c1c)'
-                            : 'linear-gradient(135deg, #0fa9ac, #0891b2)',
+                                : 'linear-gradient(135deg, #0fa9ac, #0891b2)',
                         color: '#fff', fontWeight: 700,
                         cursor: pendingPhoto && !loading ? 'pointer' : 'not-allowed',
                         fontSize: '0.85rem'

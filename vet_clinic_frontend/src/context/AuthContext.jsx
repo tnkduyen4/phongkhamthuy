@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
             sessionStorage.setItem('token', token);
 
             // Lấy thông tin user sau khi có token
-            const meRes = await axios.get('http://localhost:5000/api/v1/auth/me', {
+            const meRes = await axios.get('https://vet-clinic-1j57.onrender.com/api/v1/auth/me', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setUser(meRes.data.data);

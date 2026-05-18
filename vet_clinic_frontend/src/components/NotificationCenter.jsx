@@ -4,7 +4,7 @@ import { Bell, AlertTriangle, Info, CheckCircle, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const API = 'http://localhost:5000/api/v1';
+const API = 'https://vet-clinic-1j57.onrender.com/api/v1';
 
 const NotificationCenter = () => {
     const { user } = useAuth(); // Lấy role của user hiện tại

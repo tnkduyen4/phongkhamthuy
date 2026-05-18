@@ -25,7 +25,7 @@ const AdminChatPanel = () => {
 
     const fetchSessions = async () => {
         try {
-            const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/v1/chat/sessions`, { headers });
+            const res = await axios.get(`${import.meta.env.VITE_API_URL || 'https://vet-clinic-1j57.onrender.com'}/api/v1/chat/sessions`, { headers });
             if (res.data.success) {
                 setSessions(res.data.data);
             }
@@ -36,7 +36,7 @@ const AdminChatPanel = () => {
 
     const fetchMessages = async (sid) => {
         try {
-            const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/v1/chat/history?sessionId=${sid}`, { headers });
+            const res = await axios.get(`${import.meta.env.VITE_API_URL || 'https://vet-clinic-1j57.onrender.com'}/api/v1/chat/history?sessionId=${sid}`, { headers });
             setMessages(res.data);
             setTimeout(() => {
                 messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -79,7 +79,7 @@ const AdminChatPanel = () => {
         setIsLoading(true);
 
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/v1/chat/reply`, {
+            await axios.post(`${import.meta.env.VITE_API_URL || 'https://vet-clinic-1j57.onrender.com'}/api/v1/chat/reply`, {
                 sessionId: selectedSessionId,
                 message: tempMsg.content
             }, { headers });
@@ -95,7 +95,7 @@ const AdminChatPanel = () => {
     const handleResolve = async () => {
         if (!selectedSessionId) return;
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/v1/chat/resolve`, {
+            await axios.post(`${import.meta.env.VITE_API_URL || 'https://vet-clinic-1j57.onrender.com'}/api/v1/chat/resolve`, {
                 sessionId: selectedSessionId
             }, { headers });
             setSelectedSessionId(null);

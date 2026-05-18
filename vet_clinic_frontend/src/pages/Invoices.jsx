@@ -108,10 +108,10 @@ const Invoices = () => {
                     const linkedAptId = vac.appointmentId?._id || vac.appointmentId;
                     return linkedAptId && String(linkedAptId) === String(apt._id);
                 });
-                return { 
-                    ...apt, 
+                return {
+                    ...apt,
                     _hasLinkedGrooming: hasLinkedGrooming,
-                    _hasLinkedVaccination: hasLinkedVaccination 
+                    _hasLinkedVaccination: hasLinkedVaccination
                 };
             });
             setPendingAppointments(enrichedApts);
@@ -179,7 +179,7 @@ const Invoices = () => {
                 }
             }, 300); // Wait for render
         } else if (!loading && location.state?.highlightInvoiceId && activeTab !== 'HISTORY') {
-             setActiveTab('HISTORY'); // Switch tab first
+            setActiveTab('HISTORY'); // Switch tab first
         }
     }, [location.state, loading, activeTab]);
 
@@ -213,20 +213,20 @@ const Invoices = () => {
         try {
             if (type === 'APPOINTMENT') {
                 // 1. Fetch bệnh án
-                const r = await axios.get(`http://localhost:5000/api/v1/records?appointmentId=${item._id}`, authHeader);
+                const r = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/records?appointmentId=${item._id}`, authHeader);
                 const records = r.data.data || [];
                 if (records.length > 0) {
                     const record = records[0];
                     setCheckoutRecord(record);
                     // 2. Fetch đơn Grooming đi kèm bệnh án này (nếu có)
-                    const grRes = await axios.get(`http://localhost:5000/api/v1/grooming?medicalRecordId=${record._id}`, authHeader);
+                    const grRes = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/grooming?medicalRecordId=${record._id}`, authHeader);
                     if (grRes.data.success && grRes.data.data.length > 0) {
                         normalizedItem._linkedGrooming = grRes.data.data[0];
                     }
                 }
-                
+
                 // 3. Fetch đơn Tiêm phòng đi kèm lịch hẹn này (nếu có)
-                const vacRes = await axios.get(`http://localhost:5000/api/v1/vaccinations?appointmentId=${item._id}`, authHeader);
+                const vacRes = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/vaccinations?appointmentId=${item._id}`, authHeader);
                 if (vacRes.data.success && vacRes.data.data.length > 0) {
                     normalizedItem._linkedVaccination = vacRes.data.data[0];
                 }
@@ -234,7 +234,7 @@ const Invoices = () => {
                 // Fetch bệnh án đi kèm đơn Grooming (nếu có)
                 if (item.medicalRecordId) {
                     const recId = item.medicalRecordId._id || item.medicalRecordId;
-                    const r = await axios.get(`http://localhost:5000/api/v1/records?_id=${recId}`, authHeader);
+                    const r = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/records?_id=${recId}`, authHeader);
                     if (r.data.success && r.data.data.length > 0) setCheckoutRecord(r.data.data[0]);
                 }
             }
@@ -254,15 +254,15 @@ const Invoices = () => {
         const recId = enriched.medicalRecordId?._id || enriched.medicalRecordId;
         if (recId && recId !== 'undefined' && recId !== 'null' && (typeof enriched.medicalRecordId === 'string' || !enriched.medicalRecordId.prescriptions)) {
             try {
-                const res = await axios.get(`http://localhost:5000/api/v1/records?_id=${recId}`, authHeader);
+                const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/records?_id=${recId}`, authHeader);
                 if (res.data.success && res.data.data.length > 0) enriched.medicalRecordId = res.data.data[0];
             } catch (e) { console.error("Error enrichment Record:", e); }
         } else if (!enriched.medicalRecordId && enriched.appointmentId) {
-             // Fallback tìm bệnh án qua appointmentId
-             try {
+            // Fallback tìm bệnh án qua appointmentId
+            try {
                 const aptId = enriched.appointmentId._id || enriched.appointmentId;
                 if (aptId && aptId !== 'undefined' && aptId !== 'null') {
-                    const res = await axios.get(`http://localhost:5000/api/v1/records?appointmentId=${aptId}`, authHeader);
+                    const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/records?appointmentId=${aptId}`, authHeader);
                     if (res.data.success && res.data.data.length > 0) enriched.medicalRecordId = res.data.data[0];
                 }
             } catch (e) { }
@@ -271,8 +271,8 @@ const Invoices = () => {
         // 2. Phục hồi Grooming
         const gId = enriched.groomingOrderId?._id || enriched.groomingOrderId;
         if (gId && gId !== 'undefined' && gId !== 'null' && (typeof enriched.groomingOrderId === 'string' || !enriched.groomingOrderId.services)) {
-             try {
-                const res = await axios.get(`http://localhost:5000/api/v1/grooming?_id=${gId}`, authHeader);
+            try {
+                const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/grooming?_id=${gId}`, authHeader);
                 if (res.data.success && res.data.data.length > 0) enriched.groomingOrderId = res.data.data[0];
             } catch (e) { console.error("Error enrichment Grooming:", e); }
         } else if (!enriched.groomingOrderId && enriched.medicalRecordId) {
@@ -280,7 +280,7 @@ const Invoices = () => {
             try {
                 const mId = enriched.medicalRecordId._id || enriched.medicalRecordId;
                 if (mId && mId !== 'undefined' && mId !== 'null') {
-                    const res = await axios.get(`http://localhost:5000/api/v1/grooming?medicalRecordId=${mId}`, authHeader);
+                    const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/grooming?medicalRecordId=${mId}`, authHeader);
                     if (res.data.success && res.data.data.length > 0) enriched.groomingOrderId = res.data.data[0];
                 }
             } catch (e) { }
@@ -289,8 +289,8 @@ const Invoices = () => {
         // 3. Phục hồi Tiêm phòng
         const vId = enriched.vaccinationId?._id || enriched.vaccinationId;
         if (vId && (typeof enriched.vaccinationId === 'string' || !enriched.vaccinationId.medicineId)) {
-             try {
-                const res = await axios.get(`http://localhost:5000/api/v1/vaccinations?_id=${vId}`, authHeader);
+            try {
+                const res = await axios.get(`https://vet-clinic-1j57.onrender.com/api/v1/vaccinations?_id=${vId}`, authHeader);
                 if (res.data.success && res.data.data.length > 0) enriched.vaccinationId = res.data.data[0];
             } catch (e) { console.error("Error enrichment Vac:", e); }
         }
@@ -366,7 +366,7 @@ const Invoices = () => {
         const actualPtsUsed = inputPts;
         const ptsDiscount = actualPtsUsed * ptValue;
         const deposit = selectedApt.depositAmount || 0;
-        
+
         let subtotal = svcPrice + rxTotal;
         // Nếu có Grooming gộp vào (cho UI hiển thị khớp backend)
         if (selectedApt._linkedGrooming) {
@@ -427,7 +427,7 @@ const Invoices = () => {
         setSubmitLoading(true);
         setErrorMsg('');
         try {
-            const res = await axios.post('http://localhost:5000/api/v1/invoices', payload, {
+            const res = await axios.post('https://vet-clinic-1j57.onrender.com/api/v1/invoices', payload, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -546,47 +546,47 @@ const Invoices = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                            {/* Gom tất cả dịch vụ từ mọi nguồn, dedup theo tên */}
-                                            {(() => {
-                                                const pSvcList = [];
-                                                // appointmentId.serviceId (chỉ nếu không có grooming services)
-                                                if (printData.appointmentId?.serviceId && !(printData.groomingOrderId?.services?.length)) {
-                                                    const s = printData.appointmentId.serviceId;
-                                                    pSvcList.push({ name: s.name, price: s.price || 0, label: s.name, diagnosis: printData.medicalRecordId?.diagnosis });
-                                                }
-                                                (printData.medicalRecordId?.services || []).forEach(s => {
-                                                    pSvcList.push({ name: s.name || s.serviceId?.name, price: s.price ?? s.serviceId?.price ?? 0, label: s.name || s.serviceId?.name });
-                                                });
-                                                (printData.groomingOrderId?.services || []).forEach(s => {
-                                                    pSvcList.push({ name: s.name || s.serviceId?.name, price: s.price ?? s.serviceId?.price ?? 0, label: s.name || s.serviceId?.name });
-                                                });
-                                                // Dedup theo tên
-                                                const pSeen = new Map();
-                                                pSvcList.forEach(s => {
-                                                    if (!s.name) return;
-                                                    if (!pSeen.has(s.name) || (s.price > 0 && pSeen.get(s.name).price === 0)) pSeen.set(s.name, s);
-                                                });
+                                {/* Gom tất cả dịch vụ từ mọi nguồn, dedup theo tên */}
+                                {(() => {
+                                    const pSvcList = [];
+                                    // appointmentId.serviceId (chỉ nếu không có grooming services)
+                                    if (printData.appointmentId?.serviceId && !(printData.groomingOrderId?.services?.length)) {
+                                        const s = printData.appointmentId.serviceId;
+                                        pSvcList.push({ name: s.name, price: s.price || 0, label: s.name, diagnosis: printData.medicalRecordId?.diagnosis });
+                                    }
+                                    (printData.medicalRecordId?.services || []).forEach(s => {
+                                        pSvcList.push({ name: s.name || s.serviceId?.name, price: s.price ?? s.serviceId?.price ?? 0, label: s.name || s.serviceId?.name });
+                                    });
+                                    (printData.groomingOrderId?.services || []).forEach(s => {
+                                        pSvcList.push({ name: s.name || s.serviceId?.name, price: s.price ?? s.serviceId?.price ?? 0, label: s.name || s.serviceId?.name });
+                                    });
+                                    // Dedup theo tên
+                                    const pSeen = new Map();
+                                    pSvcList.forEach(s => {
+                                        if (!s.name) return;
+                                        if (!pSeen.has(s.name) || (s.price > 0 && pSeen.get(s.name).price === 0)) pSeen.set(s.name, s);
+                                    });
 
-                                                if (pSeen.size === 0 && printData.serviceTotal > 0) {
-                                                    return <tr><td style={{ padding: '10px 5px', borderBottom: '1px solid #eee' }}><strong>Phí thăm khám/Dịch vụ chuyên môn</strong></td><td style={{ padding: '10px 5px', textAlign: 'center', borderBottom: '1px solid #eee' }}>1</td><td style={{ padding: '10px 5px', textAlign: 'right', borderBottom: '1px solid #eee' }}>{formatCurrency(printData.serviceTotal)}</td><td style={{ padding: '10px 5px', textAlign: 'right', borderBottom: '1px solid #eee' }}>{formatCurrency(printData.serviceTotal)}</td></tr>;
-                                                }
-                                                return Array.from(pSeen.values()).map((s, idx) => (
-                                                    <tr key={`svc-dedup-${idx}`}>
-                                                        <td style={{ padding: '10px 5px', borderBottom: '1px solid #eee' }}>
-                                                            <strong>{s.label}</strong>
-                                                            {s.diagnosis && <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '4px' }}>Chẩn đoán: {s.diagnosis}</div>}
-                                                        </td>
-                                                        <td style={{ padding: '10px 5px', textAlign: 'center', borderBottom: '1px solid #eee' }}>1</td>
-                                                        <td style={{ padding: '10px 5px', textAlign: 'right', borderBottom: '1px solid #eee' }}>{formatCurrency(s.price)}</td>
-                                                        <td style={{ padding: '10px 5px', textAlign: 'right', borderBottom: '1px solid #eee' }}>{formatCurrency(s.price)}</td>
-                                                    </tr>
-                                                ));
-                                            })()}
+                                    if (pSeen.size === 0 && printData.serviceTotal > 0) {
+                                        return <tr><td style={{ padding: '10px 5px', borderBottom: '1px solid #eee' }}><strong>Phí thăm khám/Dịch vụ chuyên môn</strong></td><td style={{ padding: '10px 5px', textAlign: 'center', borderBottom: '1px solid #eee' }}>1</td><td style={{ padding: '10px 5px', textAlign: 'right', borderBottom: '1px solid #eee' }}>{formatCurrency(printData.serviceTotal)}</td><td style={{ padding: '10px 5px', textAlign: 'right', borderBottom: '1px solid #eee' }}>{formatCurrency(printData.serviceTotal)}</td></tr>;
+                                    }
+                                    return Array.from(pSeen.values()).map((s, idx) => (
+                                        <tr key={`svc-dedup-${idx}`}>
+                                            <td style={{ padding: '10px 5px', borderBottom: '1px solid #eee' }}>
+                                                <strong>{s.label}</strong>
+                                                {s.diagnosis && <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '4px' }}>Chẩn đoán: {s.diagnosis}</div>}
+                                            </td>
+                                            <td style={{ padding: '10px 5px', textAlign: 'center', borderBottom: '1px solid #eee' }}>1</td>
+                                            <td style={{ padding: '10px 5px', textAlign: 'right', borderBottom: '1px solid #eee' }}>{formatCurrency(s.price)}</td>
+                                            <td style={{ padding: '10px 5px', textAlign: 'right', borderBottom: '1px solid #eee' }}>{formatCurrency(s.price)}</td>
+                                        </tr>
+                                    ));
+                                })()}
 
 
                                 {/* 2. Thuốc kê đơn / Tiêm chủng */}
                                 {printData.invoiceType === 'VACCINATION' ? (
-                                     <tr>
+                                    <tr>
                                         <td style={{ padding: '10px 5px', borderBottom: '1px solid #eee' }}>
                                             <strong>Tiêm chủng: {printData.vaccinationId?.vaccineName || 'Vaccine'}</strong>
                                         </td>
@@ -665,7 +665,7 @@ const Invoices = () => {
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
                                     <div>Pet: <strong>{printData.medicalRecordId?.petId?.name || printData.appointmentId?.petId?.name}</strong></div>
                                     <div>Bác sĩ: <strong>{printData.medicalRecordId?.doctorId?.fullName || printData.vaccinationId?.doctorId?.fullName || printData.appointmentId?.staffId?.fullName || 'BSTY VetCare'}</strong></div>
-                                    
+
                                     <div style={{ borderTop: '1px solid #bfdbfe', paddingTop: '10px' }}>
                                         <strong>Cân nặng:</strong> {printData.medicalRecordId?.weightAtVisit || '--'} kg
                                     </div>
@@ -676,7 +676,7 @@ const Invoices = () => {
                                     <div style={{ gridColumn: 'span 2', marginTop: '5px' }}>
                                         <strong>Triệu chứng:</strong> {printData.medicalRecordId?.symptoms || 'Khám tổng quát'}
                                     </div>
-                                    
+
                                     <div style={{ gridColumn: 'span 2', marginTop: '5px', color: '#1e3a8a', fontWeight: 600 }}>
                                         <strong>Chẩn đoán:</strong> {printData.medicalRecordId?.diagnosis || 'Theo dõi lâm sàng'}
                                     </div>
@@ -700,7 +700,7 @@ const Invoices = () => {
                                 {printData.medicalRecordId?.prescriptions?.length > 0 ? (
                                     printData.medicalRecordId.prescriptions.map((p, i) => (
                                         <div key={i} style={{ marginBottom: '20px', paddingBottom: '12px', borderBottom: '1px dashed #bfdbfe' }}>
-                                             <div style={{ fontWeight: 700, color: '#000' }}>{i + 1}. {p.medicineName || p.medicineId?.productId?.name || 'Thuốc điều trị'} — SL: {p.quantity}</div>
+                                            <div style={{ fontWeight: 700, color: '#000' }}>{i + 1}. {p.medicineName || p.medicineId?.productId?.name || 'Thuốc điều trị'} — SL: {p.quantity}</div>
                                             <div style={{ paddingLeft: '25px', marginTop: '5px', color: '#4b5563', fontStyle: 'italic' }}>HD: {p.dosageInstructions}</div>
                                         </div>
                                     ))
@@ -817,8 +817,8 @@ const Invoices = () => {
                                             <div style={{ fontSize: '0.9rem', color: 'var(--text-main)', marginBottom: '4px' }}>
                                                 <strong>Dịch vụ:</strong>{' '}
                                                 <span style={{ color: 'var(--primary)' }}>
-                                                    {apt._hasLinkedVaccination 
-                                                        ? `Tiêm phòng: ${apt._linkedVaccination?.vaccineName || ''}` 
+                                                    {apt._hasLinkedVaccination
+                                                        ? `Tiêm phòng: ${apt._linkedVaccination?.vaccineName || ''}`
                                                         : (apt.serviceId?.name || (apt.category === 'VACCINATION' ? 'Tiêm Phòng (Khách Hẹn)' : 'Khám tổng quát'))}
                                                 </span>
                                             </div>
@@ -964,14 +964,14 @@ const Invoices = () => {
                                                                 else if (inv.medicalRecordId || inv.invoiceType === 'APPOINTMENT') label = { text: 'Khám bệnh', color: '#2563eb', bg: '#eff6ff' };
                                                                 else if (inv.groomingOrderId || inv.invoiceType === 'GROOMING') label = { text: 'Grooming', color: '#7c3aed', bg: '#f3e8ff' };
                                                                 else if (inv.invoiceType === 'RETAIL') label = { text: 'Bán lẻ', color: '#d97706', bg: '#fffbeb' };
-                                                                
+
                                                                 return (
-                                                                    <span style={{ 
-                                                                        fontSize: '0.65rem', 
-                                                                        fontWeight: 800, 
-                                                                        padding: '2px 6px', 
-                                                                        borderRadius: '4px', 
-                                                                        background: label.bg, 
+                                                                    <span style={{
+                                                                        fontSize: '0.65rem',
+                                                                        fontWeight: 800,
+                                                                        padding: '2px 6px',
+                                                                        borderRadius: '4px',
+                                                                        background: label.bg,
                                                                         color: label.color,
                                                                         width: 'fit-content',
                                                                         textTransform: 'uppercase'
@@ -1047,12 +1047,12 @@ const Invoices = () => {
                                                                     const btn = e.currentTarget;
                                                                     const originalText = btn.innerHTML;
                                                                     btn.innerText = 'Đang tải...';
-                                                                    
+
                                                                     const fullInv = await fetchFullInvoiceDetails(inv);
-                                                                    
+
                                                                     setSelectedInvoice(fullInv);
                                                                     setIsDetailModalOpen(true);
-                                                                    
+
                                                                     btn.disabled = false;
                                                                     btn.innerHTML = originalText;
                                                                 }}>
@@ -1083,7 +1083,7 @@ const Invoices = () => {
                         const globalGroomingServices = linkedGrooming?.services || [];
                         const perPetGroomingServices = linkedGrooming?.pets?.flatMap(p => p.services || []) || [];
                         const groomingServices = [...globalGroomingServices, ...perPetGroomingServices];
-                        
+
                         // Thu thập tất cả dịch vụ và lọc trùng theo tên
                         const collectedServices = [];
                         recordServices.forEach(s => {
@@ -1164,8 +1164,8 @@ const Invoices = () => {
                                                 <div style={{ textAlign: 'right' }}>
                                                     <div style={{ fontSize: '0.85rem', color: '#64748b' }}>Bé: <strong>{selectedApt.petId?.name || selectedApt.pets?.[0]?.petName}</strong></div>
                                                     <div style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: 600 }}>
-                                                        {selectedApt._type === 'VACCINATION' ? 'Hóa đơn Tiêm chủng' : 
-                                                         selectedApt._type === 'GROOMING' ? 'Hóa đơn Grooming' : 'Dịch vụ Thú y'}
+                                                        {selectedApt._type === 'VACCINATION' ? 'Hóa đơn Tiêm chủng' :
+                                                            selectedApt._type === 'GROOMING' ? 'Hóa đơn Grooming' : 'Dịch vụ Thú y'}
                                                     </div>
                                                 </div>
                                             </div>
@@ -1222,7 +1222,7 @@ const Invoices = () => {
                                                             {checkoutLoading && (
                                                                 <tr><td colSpan="2" style={{ padding: '20px', textAlign: 'center', color: '#94a3b8' }}>Đang tải dữ liệu bản ghi...</td></tr>
                                                             )}
-                                                            
+
                                                             {rxItems.map((p, i) => {
                                                                 const mid = p.medicineId?._id || p.medicineId;
                                                                 const med = allMedicines.find(m => m._id === mid);
@@ -1280,11 +1280,11 @@ const Invoices = () => {
                                             <div style={{ background: '#f0fdf4', padding: '16px', borderRadius: '12px', border: '1px solid #bcf0da', marginBottom: '24px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                                                 <div>
                                                     <label style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: '8px', display: 'block', color: '#065f46' }}>Tiền khách đưa (VNĐ)</label>
-                                                    <input 
-                                                        type="number" 
-                                                        className="input-field" 
+                                                    <input
+                                                        type="number"
+                                                        className="input-field"
                                                         style={{ borderColor: '#34d399', background: 'white' }}
-                                                        value={amountReceived} 
+                                                        value={amountReceived}
                                                         onChange={(e) => {
                                                             const val = e.target.value;
                                                             setAmountReceived(val);
@@ -1293,21 +1293,21 @@ const Invoices = () => {
                                                             } else {
                                                                 setChangeAmount(0);
                                                             }
-                                                        }} 
-                                                        placeholder="Vd: 500000" 
+                                                        }}
+                                                        placeholder="Vd: 500000"
                                                     />
                                                 </div>
                                                 <div>
                                                     <label style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: '8px', display: 'block', color: '#065f46' }}>Tiền thừa trả khách</label>
-                                                    <div style={{ 
-                                                        height: '42px', 
-                                                        background: '#dcfce7', 
-                                                        borderRadius: '8px', 
-                                                        display: 'flex', 
-                                                        alignItems: 'center', 
-                                                        padding: '0 12px', 
-                                                        fontWeight: 800, 
-                                                        fontSize: '1.1rem', 
+                                                    <div style={{
+                                                        height: '42px',
+                                                        background: '#dcfce7',
+                                                        borderRadius: '8px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        padding: '0 12px',
+                                                        fontWeight: 800,
+                                                        fontSize: '1.1rem',
                                                         color: changeAmount < 0 ? '#dc2626' : '#059669'
                                                     }}>
                                                         {formatCurrency(changeAmount)}
@@ -1491,7 +1491,7 @@ const Invoices = () => {
                                                 <div style={{ fontSize: '0.85rem' }}>Cân nặng: <strong>{printData.medicalRecordId.weightAtVisit} kg</strong></div>
                                             )}
                                         </div>
- 
+
                                         {/* Bổ sung Chẩn đoán & Triệu chứng tóm tắt trên Bill (Trang 1) */}
                                         {printData.medicalRecordId?.diagnosis && (
                                             <div style={{ marginTop: '10px', padding: '8px 12px', background: '#f8fafc', borderLeft: '4px solid #1e293b', fontSize: '0.85rem' }}>
@@ -1518,13 +1518,13 @@ const Invoices = () => {
                                                 if (printData.appointmentId?.serviceId) svcs.push({ name: printData.appointmentId.serviceId.name, price: printData.appointmentId.serviceId.price || 0 });
                                                 (printData.medicalRecordId?.services || []).forEach(s => svcs.push({ name: s.name || s.serviceId?.name, price: s.price !== undefined ? s.price : (s.serviceId?.price || 0) }));
                                                 (printData.groomingOrderId?.services || []).forEach(s => svcs.push({ name: s.name || s.serviceId?.name, price: s.price !== undefined ? s.price : (s.serviceId?.price || 0) }));
-                                                
+
                                                 const map = new Map();
                                                 svcs.forEach(s => {
                                                     if (!s.name) return;
                                                     if (!map.has(s.name) || (s.price > 0 && map.get(s.name).price === 0)) map.set(s.name, s);
                                                 });
-                                                
+
                                                 return Array.from(map.values()).map((s, idx) => (
                                                     <tr key={`svc-p-${idx}`} style={{ borderBottom: '1px solid #f1f5f9' }}>
                                                         <td style={{ padding: '12px' }}>
@@ -1596,76 +1596,76 @@ const Invoices = () => {
                                     </div>
                                 </div>
 
-                                 {/* TRANG 2: PRESCRIPTION (Toa thuốc & Chỉ định chi tiết) */}
-                                 {printData.medicalRecordId && (
-                                     <div style={{ width: '595px', minWidth: '595px', height: '842px', minHeight: '842px', background: 'white', boxShadow: '0 20px 50px rgba(0,0,0,0.1)', padding: '50px', border: '1px solid #cbd5e1', display: 'flex', flexDirection: 'column' }}>
-                                         <div style={{ textAlign: 'center', borderBottom: '3px solid #3b82f6', paddingBottom: '16px', marginBottom: '24px' }}>
-                                             <div style={{ fontWeight: 900, fontSize: '1.8rem', color: '#1e3a8a' }}>TOA THUỐC & CHỈ ĐỊNH</div>
-                                             <div style={{ color: '#3b82f6', fontSize: '0.9rem', letterSpacing: '2px' }}>VETCARE CLINIC HOSPITAL</div>
-                                         </div>
- 
-                                         <div style={{ marginBottom: '24px', background: '#f0f9ff', padding: '15px', borderRadius: '12px', fontSize: '0.9rem' }}>
-                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '8px' }}>
-                                                 <div>Tên Bé: <strong>{printData.medicalRecordId?.petId?.name || printData.appointmentId?.petId?.name}</strong></div>
-                                                 <div>Ngày khám: <strong>{new Date(printData.createdAt).toLocaleDateString('vi-VN')}</strong></div>
-                                                 <div>Cân nặng: <strong>{printData.medicalRecordId?.weightAtVisit || '--'} kg</strong></div>
-                                                 <div>Nhiệt độ: <strong>{printData.medicalRecordId?.temperature || '--'} °C</strong></div>
-                                                 <div style={{ gridColumn: 'span 2', marginTop: '4px', borderTop: '1px dashed #bfdbfe', paddingTop: '8px' }}>
-                                                     <span style={{ color: '#64748b' }}>Triệu chứng:</span> <strong>{printData.medicalRecordId?.symptoms || 'N/A'}</strong>
-                                                 </div>
-                                                 <div style={{ gridColumn: 'span 2' }}>
-                                                     <span style={{ color: '#64748b' }}>Chẩn đoán xác định:</span> 
-                                                     <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#1e40af', marginTop: '2px' }}>{printData.medicalRecordId?.diagnosis || 'Theo dõi lâm sàng'}</div>
-                                                 </div>
-                                                 {printData.medicalRecordId?.treatment && (
-                                                     <div style={{ gridColumn: 'span 2' }}>
-                                                         <span style={{ color: '#64748b' }}>Hướng xử lý/Điều trị:</span> {printData.medicalRecordId.treatment}
-                                                     </div>
-                                                 )}
-                                             </div>
-                                         </div>
- 
-                                         <div style={{ flex: 1 }}>
-                                             <div style={{ fontWeight: 800, color: '#1e3a8a', borderBottom: '1px solid #bfdbfe', paddingBottom: '6px', marginBottom: '12px', fontSize: '0.85rem' }}>CHI TIẾT ĐƠN THUỐC:</div>
-                                             {printData.medicalRecordId?.prescriptions?.length > 0 ? (
-                                                 printData.medicalRecordId.prescriptions.map((p, i) => (
-                                                     <div key={i} style={{ marginBottom: '16px', borderLeft: '3px solid #3b82f6', paddingLeft: '12px' }}>
-                                                         <div style={{ fontWeight: 700, fontSize: '1.05rem' }}>{i + 1}. {p.medicineName || p.medicineId?.productId?.name || p.medicineId?.name || 'Thuốc điều trị'} <span style={{ color: '#0369a1' }}>(SL: {p.quantity})</span></div>
-                                                         <div style={{ color: '#475569', fontStyle: 'italic', fontSize: '0.9rem', marginTop: '2px' }}>Cách dùng: <strong>{p.dosageInstructions || 'Theo chỉ định'}</strong></div>
-                                                     </div>
-                                                 ))
-                                             ) : (
-                                                 <div style={{ textAlign: 'center', padding: '40px', color: '#94a3b8', fontStyle: 'italic', background: '#f8fafc', borderRadius: '12px' }}>
-                                                     Không có thuốc kê đơn trong bản ghi này.
-                                                 </div>
-                                             )}
-                                         </div>
- 
-                                         <div style={{ marginTop: '20px', padding: '15px', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                                             {printData.medicalRecordId?.followUpDate ? (
-                                                 <div style={{ textAlign: 'center', color: '#059669' }}>
-                                                     <div style={{ fontSize: '0.8rem', fontWeight: 700 }}>HẸN TÁI KHÁM:</div>
-                                                     <div style={{ fontSize: '1.3rem', fontWeight: 900 }}>{new Date(printData.medicalRecordId.followUpDate).toLocaleDateString('vi-VN')}</div>
-                                                 </div>
-                                             ) : (
-                                                 <div style={{ textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>Vui lòng theo dõi sức khỏe Pet định kỳ.</div>
-                                             )}
-                                         </div>
- 
-                                         <div style={{ marginTop: '40px', display: 'flex', justifyContent: 'space-between', fontStyle: 'italic', fontSize: '0.85rem' }}>
-                                             <div style={{ textAlign: 'center', width: '200px' }}>
-                                                 <div>Khách hàng xác nhận</div>
-                                                 <div style={{ height: '60px' }}></div>
-                                                 <strong>{printData.customerId?.fullName || '...'}</strong>
-                                             </div>
-                                             <div style={{ textAlign: 'center', width: '200px' }}>
-                                                 <div>Bác sĩ phụ trách</div>
-                                                 <div style={{ height: '60px' }}></div>
-                                                 <strong>{printData.medicalRecordId?.doctorId?.fullName || 'BSTY VetCare'}</strong>
-                                             </div>
-                                         </div>
-                                     </div>
-                                 )}
+                                {/* TRANG 2: PRESCRIPTION (Toa thuốc & Chỉ định chi tiết) */}
+                                {printData.medicalRecordId && (
+                                    <div style={{ width: '595px', minWidth: '595px', height: '842px', minHeight: '842px', background: 'white', boxShadow: '0 20px 50px rgba(0,0,0,0.1)', padding: '50px', border: '1px solid #cbd5e1', display: 'flex', flexDirection: 'column' }}>
+                                        <div style={{ textAlign: 'center', borderBottom: '3px solid #3b82f6', paddingBottom: '16px', marginBottom: '24px' }}>
+                                            <div style={{ fontWeight: 900, fontSize: '1.8rem', color: '#1e3a8a' }}>TOA THUỐC & CHỈ ĐỊNH</div>
+                                            <div style={{ color: '#3b82f6', fontSize: '0.9rem', letterSpacing: '2px' }}>VETCARE CLINIC HOSPITAL</div>
+                                        </div>
+
+                                        <div style={{ marginBottom: '24px', background: '#f0f9ff', padding: '15px', borderRadius: '12px', fontSize: '0.9rem' }}>
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '8px' }}>
+                                                <div>Tên Bé: <strong>{printData.medicalRecordId?.petId?.name || printData.appointmentId?.petId?.name}</strong></div>
+                                                <div>Ngày khám: <strong>{new Date(printData.createdAt).toLocaleDateString('vi-VN')}</strong></div>
+                                                <div>Cân nặng: <strong>{printData.medicalRecordId?.weightAtVisit || '--'} kg</strong></div>
+                                                <div>Nhiệt độ: <strong>{printData.medicalRecordId?.temperature || '--'} °C</strong></div>
+                                                <div style={{ gridColumn: 'span 2', marginTop: '4px', borderTop: '1px dashed #bfdbfe', paddingTop: '8px' }}>
+                                                    <span style={{ color: '#64748b' }}>Triệu chứng:</span> <strong>{printData.medicalRecordId?.symptoms || 'N/A'}</strong>
+                                                </div>
+                                                <div style={{ gridColumn: 'span 2' }}>
+                                                    <span style={{ color: '#64748b' }}>Chẩn đoán xác định:</span>
+                                                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#1e40af', marginTop: '2px' }}>{printData.medicalRecordId?.diagnosis || 'Theo dõi lâm sàng'}</div>
+                                                </div>
+                                                {printData.medicalRecordId?.treatment && (
+                                                    <div style={{ gridColumn: 'span 2' }}>
+                                                        <span style={{ color: '#64748b' }}>Hướng xử lý/Điều trị:</span> {printData.medicalRecordId.treatment}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div style={{ flex: 1 }}>
+                                            <div style={{ fontWeight: 800, color: '#1e3a8a', borderBottom: '1px solid #bfdbfe', paddingBottom: '6px', marginBottom: '12px', fontSize: '0.85rem' }}>CHI TIẾT ĐƠN THUỐC:</div>
+                                            {printData.medicalRecordId?.prescriptions?.length > 0 ? (
+                                                printData.medicalRecordId.prescriptions.map((p, i) => (
+                                                    <div key={i} style={{ marginBottom: '16px', borderLeft: '3px solid #3b82f6', paddingLeft: '12px' }}>
+                                                        <div style={{ fontWeight: 700, fontSize: '1.05rem' }}>{i + 1}. {p.medicineName || p.medicineId?.productId?.name || p.medicineId?.name || 'Thuốc điều trị'} <span style={{ color: '#0369a1' }}>(SL: {p.quantity})</span></div>
+                                                        <div style={{ color: '#475569', fontStyle: 'italic', fontSize: '0.9rem', marginTop: '2px' }}>Cách dùng: <strong>{p.dosageInstructions || 'Theo chỉ định'}</strong></div>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div style={{ textAlign: 'center', padding: '40px', color: '#94a3b8', fontStyle: 'italic', background: '#f8fafc', borderRadius: '12px' }}>
+                                                    Không có thuốc kê đơn trong bản ghi này.
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div style={{ marginTop: '20px', padding: '15px', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                                            {printData.medicalRecordId?.followUpDate ? (
+                                                <div style={{ textAlign: 'center', color: '#059669' }}>
+                                                    <div style={{ fontSize: '0.8rem', fontWeight: 700 }}>HẸN TÁI KHÁM:</div>
+                                                    <div style={{ fontSize: '1.3rem', fontWeight: 900 }}>{new Date(printData.medicalRecordId.followUpDate).toLocaleDateString('vi-VN')}</div>
+                                                </div>
+                                            ) : (
+                                                <div style={{ textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>Vui lòng theo dõi sức khỏe Pet định kỳ.</div>
+                                            )}
+                                        </div>
+
+                                        <div style={{ marginTop: '40px', display: 'flex', justifyContent: 'space-between', fontStyle: 'italic', fontSize: '0.85rem' }}>
+                                            <div style={{ textAlign: 'center', width: '200px' }}>
+                                                <div>Khách hàng xác nhận</div>
+                                                <div style={{ height: '60px' }}></div>
+                                                <strong>{printData.customerId?.fullName || '...'}</strong>
+                                            </div>
+                                            <div style={{ textAlign: 'center', width: '200px' }}>
+                                                <div>Bác sĩ phụ trách</div>
+                                                <div style={{ height: '60px' }}></div>
+                                                <strong>{printData.medicalRecordId?.doctorId?.fullName || 'BSTY VetCare'}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             <div style={{ padding: '24px 40px', borderTop: '1px solid #e2e8f0', display: 'flex', gap: '16px', background: 'white' }}>
@@ -1694,17 +1694,17 @@ const Invoices = () => {
                                     <h3 style={{ margin: 0, color: 'var(--primary)', fontSize: '1.25rem', fontWeight: 800 }}>Chi Tiết Hóa Đơn</h3>
                                     <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: '#64748b' }}>Mã HĐ: <strong style={{ color: 'var(--text-main)' }}>#{selectedInvoice._id.toUpperCase()}</strong></p>
                                 </div>
-                                <button style={{ background: '#f1f5f9', border: 'none', color: '#94a3b8', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} 
+                                <button style={{ background: '#f1f5f9', border: 'none', color: '#94a3b8', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                                     onClick={() => { setIsDetailModalOpen(false); setSelectedInvoice(null); }}>
                                     <X size={24} />
                                 </button>
                             </div>
 
-                            <div className="modal-body" style={{ 
-                                overflowY: 'auto', 
-                                padding: '24px', 
-                                display: 'grid', 
-                                gridTemplateColumns: selectedInvoice.medicalRecordId ? 'repeat(auto-fit, minmax(450px, 1fr))' : '1fr', 
+                            <div className="modal-body" style={{
+                                overflowY: 'auto',
+                                padding: '24px',
+                                display: 'grid',
+                                gridTemplateColumns: selectedInvoice.medicalRecordId ? 'repeat(auto-fit, minmax(450px, 1fr))' : '1fr',
                                 gap: '24px',
                                 maxWidth: selectedInvoice.medicalRecordId ? '1200px' : '650px',
                                 margin: '0 auto',
@@ -1746,77 +1746,77 @@ const Invoices = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                 {selectedInvoice.serviceTotal > 0 && (() => {
-                                                     // Gom tất cả tên dịch vụ, dedup theo tên — tránh "Tắm Vệ Sinh" hiện 2 lần
-                                                     const svcMap = new Map();
-                                                     (selectedInvoice.medicalRecordId?.services || []).forEach(s => {
-                                                         const name = s.name || s.serviceId?.name;
-                                                         if (name && !svcMap.has(name)) svcMap.set(name, { name, isGrooming: false });
-                                                     });
-                                                     (selectedInvoice.groomingOrderId?.services || []).forEach(s => {
-                                                         const name = s.name || s.serviceId?.name;
-                                                         if (name && !svcMap.has(name)) svcMap.set(name, { name, isGrooming: true });
-                                                     });
-                                                     if (svcMap.size === 0 && (selectedInvoice.invoiceType === 'APPOINTMENT' || selectedInvoice.invoiceType === 'GROOMING')) {
-                                                         const fallback = selectedInvoice.appointmentId?.serviceId?.name || 'Dịch vụ tổng quát/Spa';
-                                                         svcMap.set(fallback, { name: fallback, isGrooming: false });
-                                                     }
-                                                     const dedupedSvcs = Array.from(svcMap.values());
-                                                     return (
-                                                         <tr style={{ borderBottom: '1px solid #f8fafc' }}>
-                                                             <td style={{ padding: '12px 0' }}>
-                                                                 <div style={{ fontWeight: 600 }}>{selectedInvoice.invoiceType === 'GROOMING' ? 'Dịch vụ Spa & Grooming' : 'Dịch vụ chuyên môn & Spa'}</div>
-                                                                 {dedupedSvcs.map((s, idx) => (
-                                                                     <div key={idx} style={{ fontSize: '0.75rem', color: s.isGrooming ? '#7c3aed' : '#64748b', paddingLeft: '10px' }}>
-                                                                         • {s.name}{s.isGrooming ? ' (Grooming)' : ''}
-                                                                     </div>
-                                                                 ))}
-                                                             </td>
-                                                             <td style={{ padding: '12px 0', textAlign: 'right', fontWeight: 700 }}>{formatCurrency(selectedInvoice.serviceTotal)}</td>
-                                                         </tr>
-                                                     );
-                                                 })()}
+                                                {selectedInvoice.serviceTotal > 0 && (() => {
+                                                    // Gom tất cả tên dịch vụ, dedup theo tên — tránh "Tắm Vệ Sinh" hiện 2 lần
+                                                    const svcMap = new Map();
+                                                    (selectedInvoice.medicalRecordId?.services || []).forEach(s => {
+                                                        const name = s.name || s.serviceId?.name;
+                                                        if (name && !svcMap.has(name)) svcMap.set(name, { name, isGrooming: false });
+                                                    });
+                                                    (selectedInvoice.groomingOrderId?.services || []).forEach(s => {
+                                                        const name = s.name || s.serviceId?.name;
+                                                        if (name && !svcMap.has(name)) svcMap.set(name, { name, isGrooming: true });
+                                                    });
+                                                    if (svcMap.size === 0 && (selectedInvoice.invoiceType === 'APPOINTMENT' || selectedInvoice.invoiceType === 'GROOMING')) {
+                                                        const fallback = selectedInvoice.appointmentId?.serviceId?.name || 'Dịch vụ tổng quát/Spa';
+                                                        svcMap.set(fallback, { name: fallback, isGrooming: false });
+                                                    }
+                                                    const dedupedSvcs = Array.from(svcMap.values());
+                                                    return (
+                                                        <tr style={{ borderBottom: '1px solid #f8fafc' }}>
+                                                            <td style={{ padding: '12px 0' }}>
+                                                                <div style={{ fontWeight: 600 }}>{selectedInvoice.invoiceType === 'GROOMING' ? 'Dịch vụ Spa & Grooming' : 'Dịch vụ chuyên môn & Spa'}</div>
+                                                                {dedupedSvcs.map((s, idx) => (
+                                                                    <div key={idx} style={{ fontSize: '0.75rem', color: s.isGrooming ? '#7c3aed' : '#64748b', paddingLeft: '10px' }}>
+                                                                        • {s.name}{s.isGrooming ? ' (Grooming)' : ''}
+                                                                    </div>
+                                                                ))}
+                                                            </td>
+                                                            <td style={{ padding: '12px 0', textAlign: 'right', fontWeight: 700 }}>{formatCurrency(selectedInvoice.serviceTotal)}</td>
+                                                        </tr>
+                                                    );
+                                                })()}
 
-                                                 {selectedInvoice.retailItems?.length > 0 && selectedInvoice.retailItems.map((item, idx) => (
-                                                     <tr key={`retail-${idx}`} style={{ borderBottom: '1px solid #f8fafc' }}>
-                                                         <td style={{ padding: '12px 0' }}>
-                                                             <div style={{ fontWeight: 600 }}>{item.productName || item.medicineId?.productId?.name || item.medicineId?.name || 'Sản phẩm lẻ'}</div>
-                                                             <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Số lượng: {item.quantity} x {formatCurrency(item.unitPrice || 0)}</div>
-                                                         </td>
-                                                         <td style={{ padding: '12px 0', textAlign: 'right', fontWeight: 700 }}>{formatCurrency(item.subtotal || 0)}</td>
-                                                     </tr>
-                                                 ))}
-                                                 {selectedInvoice.medicineTotal > 0 && (
-                                                     <>
-                                                         {/* CÓ THUỐC TRONG BỆNH ÁN */}
-                                                         {selectedInvoice.medicalRecordId?.prescriptions?.length > 0 && (
-                                                             <tr style={{ borderBottom: '1px solid #f8fafc' }}>
-                                                                 <td style={{ padding: '12px 0' }}>
-                                                                     <div style={{ fontWeight: 600 }}>Y tế & Toa thuốc</div>
-                                                                     {selectedInvoice.medicalRecordId.prescriptions.map((p, idx) => (
-                                                                         <div key={idx} style={{ fontSize: '0.75rem', color: '#64748b', paddingLeft: '10px' }}>• {p.medicineName || p.medicineId?.productId?.name || p.medicineId?.name || 'Thuốc'} (SL: {p.quantity})</div>
-                                                                     ))}
-                                                                 </td>
-                                                                 <td style={{ padding: '12px 0', textAlign: 'right', fontWeight: 700 }}>
-                                                                     {formatCurrency(
-                                                                         selectedInvoice.medicalRecordId.prescriptions.reduce((s, p) => 
-                                                                             s + ((p.medicineId?.retailPrice || 0) * p.quantity), 0)
-                                                                     )}
-                                                                 </td>
-                                                             </tr>
-                                                         )}
-                                                         {/* CÓ TIÊM PHÒNG */}
-                                                         {selectedInvoice.vaccinationId && (
-                                                             <tr style={{ borderBottom: '1px solid #f8fafc' }}>
-                                                                 <td style={{ padding: '12px 0' }}>
-                                                                     <div style={{ fontWeight: 600 }}>Dịch vụ Tiêm chủng</div>
-                                                                     <div style={{ fontSize: '0.75rem', color: '#64748b', paddingLeft: '10px' }}>• {selectedInvoice.vaccinationId.vaccineName || 'Vaccine'}</div>
-                                                                 </td>
-                                                                 <td style={{ padding: '12px 0', textAlign: 'right', fontWeight: 700 }}>{formatCurrency(selectedInvoice.vaccinationId.price || 0)}</td>
-                                                             </tr>
-                                                         )}
-                                                     </>
-                                                 )}
+                                                {selectedInvoice.retailItems?.length > 0 && selectedInvoice.retailItems.map((item, idx) => (
+                                                    <tr key={`retail-${idx}`} style={{ borderBottom: '1px solid #f8fafc' }}>
+                                                        <td style={{ padding: '12px 0' }}>
+                                                            <div style={{ fontWeight: 600 }}>{item.productName || item.medicineId?.productId?.name || item.medicineId?.name || 'Sản phẩm lẻ'}</div>
+                                                            <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Số lượng: {item.quantity} x {formatCurrency(item.unitPrice || 0)}</div>
+                                                        </td>
+                                                        <td style={{ padding: '12px 0', textAlign: 'right', fontWeight: 700 }}>{formatCurrency(item.subtotal || 0)}</td>
+                                                    </tr>
+                                                ))}
+                                                {selectedInvoice.medicineTotal > 0 && (
+                                                    <>
+                                                        {/* CÓ THUỐC TRONG BỆNH ÁN */}
+                                                        {selectedInvoice.medicalRecordId?.prescriptions?.length > 0 && (
+                                                            <tr style={{ borderBottom: '1px solid #f8fafc' }}>
+                                                                <td style={{ padding: '12px 0' }}>
+                                                                    <div style={{ fontWeight: 600 }}>Y tế & Toa thuốc</div>
+                                                                    {selectedInvoice.medicalRecordId.prescriptions.map((p, idx) => (
+                                                                        <div key={idx} style={{ fontSize: '0.75rem', color: '#64748b', paddingLeft: '10px' }}>• {p.medicineName || p.medicineId?.productId?.name || p.medicineId?.name || 'Thuốc'} (SL: {p.quantity})</div>
+                                                                    ))}
+                                                                </td>
+                                                                <td style={{ padding: '12px 0', textAlign: 'right', fontWeight: 700 }}>
+                                                                    {formatCurrency(
+                                                                        selectedInvoice.medicalRecordId.prescriptions.reduce((s, p) =>
+                                                                            s + ((p.medicineId?.retailPrice || 0) * p.quantity), 0)
+                                                                    )}
+                                                                </td>
+                                                            </tr>
+                                                        )}
+                                                        {/* CÓ TIÊM PHÒNG */}
+                                                        {selectedInvoice.vaccinationId && (
+                                                            <tr style={{ borderBottom: '1px solid #f8fafc' }}>
+                                                                <td style={{ padding: '12px 0' }}>
+                                                                    <div style={{ fontWeight: 600 }}>Dịch vụ Tiêm chủng</div>
+                                                                    <div style={{ fontSize: '0.75rem', color: '#64748b', paddingLeft: '10px' }}>• {selectedInvoice.vaccinationId.vaccineName || 'Vaccine'}</div>
+                                                                </td>
+                                                                <td style={{ padding: '12px 0', textAlign: 'right', fontWeight: 700 }}>{formatCurrency(selectedInvoice.vaccinationId.price || 0)}</td>
+                                                            </tr>
+                                                        )}
+                                                    </>
+                                                )}
                                             </tbody>
                                         </table>
                                     </div>
@@ -1891,7 +1891,7 @@ const Invoices = () => {
                                                 <div><span style={{ color: '#64748b' }}>Cân nặng:</span> <strong>{selectedInvoice.medicalRecordId.weightAtVisit || '--'} kg</strong></div>
                                                 <div><span style={{ color: '#64748b' }}>Nhiệt độ:</span> <strong>{selectedInvoice.medicalRecordId.temperature || '--'} °C</strong></div>
                                                 <div style={{ gridColumn: 'span 2' }}>
-                                                    <span style={{ color: '#64748b' }}>Triệu chứng:</span> 
+                                                    <span style={{ color: '#64748b' }}>Triệu chứng:</span>
                                                     <div style={{ marginTop: '4px', borderLeft: '3px solid #bfdbfe', paddingLeft: '8px' }}>{selectedInvoice.medicalRecordId.symptoms || 'Khám tổng quát'}</div>
                                                 </div>
                                                 <div style={{ gridColumn: 'span 2', background: 'white', padding: '12px', borderRadius: '8px', border: '1px solid #bfdbfe', marginTop: '8px' }}>
@@ -1912,10 +1912,10 @@ const Invoices = () => {
                                             {selectedInvoice.medicalRecordId.prescriptions && selectedInvoice.medicalRecordId.prescriptions.length > 0 ? (
                                                 selectedInvoice.medicalRecordId.prescriptions.map((p, idx) => (
                                                     <div key={idx} style={{ padding: '12px', borderBottom: '1px dashed #e2e8f0', background: idx % 2 === 0 ? '#f8fafc' : 'white', borderRadius: '8px', marginBottom: '4px' }}>
-                                                         <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#1e293b' }}>
-                                                            {idx + 1}. {p.medicineName || p.medicineId?.productId?.name || p.medicineId?.name || 'Tên thuốc'} 
+                                                        <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#1e293b' }}>
+                                                            {idx + 1}. {p.medicineName || p.medicineId?.productId?.name || p.medicineId?.name || 'Tên thuốc'}
                                                             <span style={{ color: '#0369a1', marginLeft: '8px' }}>(SL: {p.quantity})</span>
-                                                         </div>
+                                                        </div>
                                                         <div style={{ fontSize: '0.85rem', color: '#64748b', fontStyle: 'italic', marginTop: '6px', paddingLeft: '20px', borderLeft: '2px solid #3b82f6' }}>
                                                             <strong>Liều dùng:</strong> {p.dosageInstructions || 'Theo chỉ dẫn của bác sĩ'}
                                                         </div>
@@ -1942,7 +1942,7 @@ const Invoices = () => {
 
 
                             <div style={{ padding: '24px 32px', borderTop: '1px solid #f1f5f9', background: '#f8fafc', display: 'flex', gap: '16px' }}>
-                                <button className="btn" style={{ flex: 1, background: 'white', border: '1px solid #e2e8f0', height: '48px', fontSize: '1rem', fontWeight: 600 }} 
+                                <button className="btn" style={{ flex: 1, background: 'white', border: '1px solid #e2e8f0', height: '48px', fontSize: '1rem', fontWeight: 600 }}
                                     onClick={() => { setIsDetailModalOpen(false); setSelectedInvoice(null); }}>Đóng cửa sổ</button>
                                 <button className="btn btn-primary" style={{ flex: 1.5, height: '48px', fontSize: '1rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
                                     onClick={() => { const inv = selectedInvoice; setIsDetailModalOpen(false); setSelectedInvoice(null); handlePrint(inv); }}>

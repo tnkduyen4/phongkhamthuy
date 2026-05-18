@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API = 'http://localhost:5000/api/v1';
+const API = 'https://vet-clinic-1j57.onrender.com/api/v1';
 
 /**
  * Tách riêng hàm upload Base64 sang Cloudinary
