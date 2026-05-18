@@ -816,67 +816,101 @@ const POS = () => {
                                                 <span style={{ color: '#dc2626' }}>-{formatCurrency(printData.pointsUsed * (clinicConfig?.rewardPointsConfig?.valuePerPoint || 1000))}</span>
                                             </div>
                                         )}
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.4rem', fontWeight: 900, color: 'var(--primary)' }}>
-                                            <span>TỔNG THANH TOÁN:</span>
-                                            <span>{formatCurrency(printData.finalTotal || 0)}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="pos-print-footer" style={{ padding: '24px 40px', borderTop: '1px solid #e2e8f0', display: 'flex', gap: '16px', background: 'white' }}>
-                                <button className="btn" style={{ flex: 1, background: '#f1f5f9', border: '1px solid #e2e8f0', color: '#64748b', fontWeight: 600, height: '56px' }} onClick={() => setShowPdfPreview(false)}>Đóng</button>
-                                <button className="btn btn-primary" style={{ flex: 1.5, height: '56px', fontSize: '1rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }} onClick={() => window.print()}>
-                                    <CheckCircle2 size={24} /> XÁC NHẬN IN (PDF)
-                                </button>
-                            </div>
-                        </div>
-                    </div>,
-                    document.body
-                )}
-
-                {/* ===== CONFIRM CHECKOUT MODAL ===== */}
+                 {/* ===== CONFIRM CHECKOUT MODAL ===== */}
                 {showConfirmCheckout && createPortal(
                     <div className="modal-overlay animate-fade-in" style={{ zIndex: 3000 }}>
-                        <div className="modal-container glass-card animate-slide-up" style={{ width: '90%', maxWidth: '400px', padding: 0, borderRadius: '24px', overflow: 'hidden' }}>
-                            <div style={{ background: '#f8fafc', padding: '24px', borderBottom: '1px solid #eef2f5', textAlign: 'center' }}>
-                                <div style={{ width: '64px', height: '64px', background: '#dcfce7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#059669' }}>
-                                    <ShoppingCart size={32} />
-                                </div>
-                                <h3 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-main)' }}>Xác nhận thanh toán</h3>
-                                <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '8px' }}>Bạn có chắc chắn muốn xuất kho và in hóa đơn cho <strong style={{ color: 'var(--primary)' }}>{selectedCustomer?.fullName || 'Khách vãng lai'}</strong>?</p>
-                            </div>
-                            <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '8px', background: 'white' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                                    <span style={{ color: '#64748b' }}>Tổng tiền hàng:</span>
-                                    <strong style={{ color: 'var(--text-main)', fontSize: '1rem' }}>{formatCurrency(total)}</strong>
-                                </div>
-                                {Number(discountAmount) > 0 && (
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                                        <span style={{ color: '#64748b' }}>Khuyến mãi:</span>
-                                        <strong style={{ color: '#dc2626', fontSize: '1rem' }}>-{formatCurrency(Number(discountAmount))}</strong>
+                        {paymentMethod === 'TRANSFER' ? (
+                            // Giao diện Chuyển khoản QR POS chuyên nghiệp
+                            <div className="modal-container glass-card animate-slide-up" style={{ width: '90%', maxWidth: '480px', padding: 0, borderRadius: '24px', overflow: 'hidden' }}>
+                                <div style={{ background: '#f0fdf4', padding: '24px', borderBottom: '1px solid #d1fae5', textAlign: 'center' }}>
+                                    <div style={{ width: '64px', height: '64px', background: '#34d399', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'white' }}>
+                                        <QrCode size={32} />
                                     </div>
-                                )}
-                                {Number(pointsUsed) > 0 && (
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                                        <span style={{ color: '#64748b' }}>Đổi điểm:</span>
-                                        <strong style={{ color: '#dc2626', fontSize: '1rem' }}>-{formatCurrency(pointsDiscount)}</strong>
+                                    <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 800, color: '#065f46' }}>Quét mã QR Chuyển khoản</h3>
+                                    <p style={{ fontSize: '0.85rem', color: '#047857', marginTop: '6px' }}>Vui lòng đưa mã này cho khách hàng quét để thanh toán đơn hàng</p>
+                                </div>
+                                <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', background: 'white' }}>
+                                    <div style={{ display: 'inline-block', background: 'white', padding: '12px', borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 8px 30px rgba(0,0,0,0.05)' }}>
+                                        <img
+                                            src={`https://qr.sepay.vn/img?acc=106878233519&bank=Vietinbank&amount=${finalTotal}&des=ThanhToanDonHang`}
+                                            alt="QR Code"
+                                            style={{ width: '200px', height: '200px', display: 'block' }}
+                                        />
                                     </div>
-                                )}
-                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.1rem', marginTop: '8px', paddingTop: '8px', borderTop: '1px dashed #e2e8f0' }}>
-                                    <span style={{ color: '#0f172a', fontWeight: 800 }}>Cần thanh toán:</span>
-                                    <strong style={{ color: 'var(--primary)', fontSize: '1.2rem' }}>{formatCurrency(finalTotal)}</strong>
+                                    
+                                    <div style={{ width: '100%', background: '#f8fafc', padding: '16px', borderRadius: '16px', border: '1px solid #e2e8f0', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <span style={{ color: '#64748b' }}>Ngân hàng:</span>
+                                            <strong style={{ color: 'var(--text-main)' }}>Vietinbank</strong>
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <span style={{ color: '#64748b' }}>Số tài khoản:</span>
+                                            <strong style={{ color: 'var(--text-main)' }}>106878233519</strong>
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <span style={{ color: '#64748b' }}>Số tiền chuyển:</span>
+                                            <strong style={{ color: 'var(--primary)', fontSize: '1.1rem' }}>{formatCurrency(finalTotal)}</strong>
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <span style={{ color: '#64748b' }}>Nội dung CK:</span>
+                                            <strong style={{ color: '#059669' }}>ThanhToanDonHang</strong>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', color: '#d97706', background: '#fffbeb', padding: '10px 14px', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 600, border: '1px solid #fde68a', width: '100%' }}>
+                                        <span style={{ display: 'inline-block', width: '8px', height: '8px', background: '#d97706', borderRadius: '50%', animation: 'ping 1.5s infinite' }}></span>
+                                        <span>Đang chờ khách chuyển khoản... Vui lòng kiểm tra tài khoản nhận trước khi xác nhận.</span>
+                                    </div>
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginTop: '8px' }}>
-                                    <span style={{ color: '#64748b' }}>Thanh toán qua:</span>
-                                    <strong style={{ color: 'var(--primary)' }}>{paymentMethod === 'CASH' ? 'Tiền mặt' : paymentMethod === 'TRANSFER' ? 'Chuyển khoản' : 'Quẹt thẻ'}</strong>
+                                <div style={{ padding: '16px 24px', display: 'flex', gap: '12px', background: '#f8fafc', borderTop: '1px solid #eef2f5' }}>
+                                    <button className="btn" style={{ flex: 1, background: 'white', border: '1px solid #e2e8f0' }} onClick={() => setShowConfirmCheckout(false)}>Hủy bỏ</button>
+                                    <button className="btn btn-primary" style={{ flex: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', fontSize: '0.95rem', background: '#059669', border: 'none', boxShadow: '0 4px 12px rgba(5,150,105,0.2)' }} onClick={checkout}>
+                                        <CheckCircle2 size={18} /> Xác nhận đã nhận tiền
+                                    </button>
                                 </div>
                             </div>
-                            <div style={{ padding: '16px 24px', display: 'flex', gap: '12px', background: '#f8fafc', borderTop: '1px solid #eef2f5' }}>
-                                <button className="btn" style={{ flex: 1, background: 'white', border: '1px solid #e2e8f0' }} onClick={() => setShowConfirmCheckout(false)}>Hủy</button>
-                                <button className="btn btn-primary" style={{ flex: 1.5, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', fontSize: '0.95rem' }} onClick={checkout}>Xác nhận xuất</button>
+                        ) : (
+                            // Giao diện Tiền mặt / Quẹt thẻ mặc định
+                            <div className="modal-container glass-card animate-slide-up" style={{ width: '90%', maxWidth: '400px', padding: 0, borderRadius: '24px', overflow: 'hidden' }}>
+                                <div style={{ background: '#f8fafc', padding: '24px', borderBottom: '1px solid #eef2f5', textAlign: 'center' }}>
+                                    <div style={{ width: '64px', height: '64px', background: '#dcfce7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#059669' }}>
+                                        <ShoppingCart size={32} />
+                                    </div>
+                                    <h3 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-main)' }}>Xác nhận thanh toán</h3>
+                                    <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '8px' }}>Bạn có chắc chắn muốn xuất kho và in hóa đơn cho <strong style={{ color: 'var(--primary)' }}>{selectedCustomer?.fullName || 'Khách vãng lai'}</strong>?</p>
+                                </div>
+                                <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '8px', background: 'white' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+                                        <span style={{ color: '#64748b' }}>Tổng tiền hàng:</span>
+                                        <strong style={{ color: 'var(--text-main)', fontSize: '1rem' }}>{formatCurrency(total)}</strong>
+                                    </div>
+                                    {Number(discountAmount) > 0 && (
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+                                            <span style={{ color: '#64748b' }}>Khuyến mãi:</span>
+                                            <strong style={{ color: '#dc2626', fontSize: '1rem' }}>-{formatCurrency(Number(discountAmount))}</strong>
+                                        </div>
+                                    )}
+                                    {Number(pointsUsed) > 0 && (
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+                                            <span style={{ color: '#64748b' }}>Đổi điểm:</span>
+                                            <strong style={{ color: '#dc2626', fontSize: '1rem' }}>-{formatCurrency(pointsDiscount)}</strong>
+                                        </div>
+                                    )}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.1rem', marginTop: '8px', paddingTop: '8px', borderTop: '1px dashed #e2e8f0' }}>
+                                        <span style={{ color: '#0f172a', fontWeight: 800 }}>Cần thanh toán:</span>
+                                        <strong style={{ color: 'var(--primary)', fontSize: '1.2rem' }}>{formatCurrency(finalTotal)}</strong>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginTop: '8px' }}>
+                                        <span style={{ color: '#64748b' }}>Thanh toán qua:</span>
+                                        <strong style={{ color: 'var(--primary)' }}>{paymentMethod === 'CASH' ? 'Tiền mặt' : 'Quẹt thẻ'}</strong>
+                                    </div>
+                                </div>
+                                <div style={{ padding: '16px 24px', display: 'flex', gap: '12px', background: '#f8fafc', borderTop: '1px solid #eef2f5' }}>
+                                    <button className="btn" style={{ flex: 1, background: 'white', border: '1px solid #e2e8f0' }} onClick={() => setShowConfirmCheckout(false)}>Hủy</button>
+                                    <button className="btn btn-primary" style={{ flex: 1.5, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', fontSize: '0.95rem' }} onClick={checkout}>Xác nhận xuất</button>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>,
                     document.body
                 )}
