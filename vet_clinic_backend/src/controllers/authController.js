@@ -88,6 +88,9 @@ const loginUser = async (req, res) => {
             });
 
         if (user && (await bcrypt.compare(password, user.password))) {
+            if (user.isActive === false) {
+                return res.status(403).json({ success: false, message: 'Tài khoản của bạn đã bị khóa hoặc ngưng hoạt động. Vui lòng liên hệ phòng khám.' });
+            }
             // Chỉ ghi log đăng nhập của nhân viên (không ghi khách hàng)
             if (user.role !== 'CUSTOMER') {
                 logActivity({
@@ -185,6 +188,9 @@ const claimAccount = async (req, res) => {
         if (!user) {
             return res.status(404).json({ success: false, message: 'Số điện thoại này chưa có trong hệ thống. Hãy đăng ký tài khoản mới.' });
         }
+        if (user.isActive === false) {
+            return res.status(403).json({ success: false, message: 'Tài khoản của bạn đã bị khóa hoặc ngưng hoạt động. Vui lòng liên hệ phòng khám.' });
+        }
         if (user.password) {
             return res.status(400).json({ success: false, message: 'Tài khoản này đã được kích hoạt. Vui lòng đăng nhập bình thường.' });
         }
@@ -218,6 +224,9 @@ const forgotPassword = async (req, res) => {
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ success: false, message: 'Không tìm thấy tài khoản với email này.' });
+        }
+        if (user.isActive === false) {
+            return res.status(403).json({ success: false, message: 'Tài khoản của bạn đã bị khóa hoặc ngưng hoạt động. Vui lòng liên hệ phòng khám.' });
         }
 
         // Tạo mã OTP 6 số ngẫu nhiên

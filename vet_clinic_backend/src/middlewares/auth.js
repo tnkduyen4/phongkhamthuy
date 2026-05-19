@@ -21,6 +21,10 @@ const protect = async (req, res, next) => {
                 return res.status(401).json({ success: false, message: 'Người dùng không tồn tại' });
             }
 
+            if (req.user.isActive === false) {
+                return res.status(401).json({ success: false, message: 'Tài khoản của bạn đã bị khóa hoặc ngưng hoạt động. Vui lòng liên hệ phòng khám.' });
+            }
+
             // Gắn flag hasVerificationPhoto mỏng nhẹ để frontend biết user đã có ảnh FaceID chưa,
             // mà không cần tải nguyên chuỗi Base64 62KB về.
             if (req.user.role !== 'CUSTOMER') {

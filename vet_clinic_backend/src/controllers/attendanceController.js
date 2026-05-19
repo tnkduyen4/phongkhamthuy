@@ -67,7 +67,7 @@ exports.checkIn = async (req, res) => {
     try {
         const { lat, lng, photo, similarityScore, scheduleId: requestedScheduleId } = req.body;
 
-        const user = await User.findById(req.user._id);
+        const user = await User.findById(req.user._id).populate('staffProfile');
         if (!user.verificationPhoto) {
             return res.status(400).json({
                 success: false,

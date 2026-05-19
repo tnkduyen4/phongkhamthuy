@@ -11,7 +11,7 @@ const CustomerDisplay = () => {
 
     useEffect(() => {
         const handleStorage = () => {
-            const current = sessionStorage.getItem('vetcare_customer_display');
+            const current = localStorage.getItem('vetcare_customer_display');
             if (current) {
                 const parsed = JSON.parse(current);
                 setData(parsed);

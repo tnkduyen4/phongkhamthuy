@@ -64,7 +64,7 @@ const loadImage = (url) =>
  *   success: true nếu score >= THRESHOLD
  */
 export const verifyFace = async (referencePhotoUrl, capturedCanvas) => {
-    const THRESHOLD = 0.40; // khoảng cách euclidean ≤ 0.60 → score ≥ 0.40 → pass
+    const THRESHOLD = 0.55; // khoảng cách euclidean ≤ 0.45 → score ≥ 0.55 → pass
 
     // 1. Load ảnh mẫu
     let refImg;

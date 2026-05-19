@@ -47,12 +47,27 @@ router.post('/me/face-reset-request', protect, requestFaceReset);
 // Chỉ trả về _id, fullName, verificationPhoto (loại bản thân + loại CUSTOMER)
 router.get('/me/other-face-photos', protect, async (req, res) => {
     try {
-        const others = await User.find({
-            _id: { $ne: req.user._id },
+        const StaffProfile = require('../models/StaffProfile');
+        const profiles = await StaffProfile.find({
+            verificationPhoto: { $exists: true, $nin: [null, ''] }
+        }).select('userId verificationPhoto').lean();
+
+        const userIds = profiles.map(p => p.userId);
+
+        const users = await User.find({
+            _id: { $in: userIds, $ne: req.user._id },
             role: { $ne: 'CUSTOMER' },
-            verificationPhoto: { $exists: true, $nin: [null, ''] },
             isActive: { $ne: false }
-        }).select('_id fullName verificationPhoto');
+        }).select('_id fullName').lean();
+
+        const others = users.map(u => {
+            const profile = profiles.find(p => p.userId.toString() === u._id.toString());
+            return {
+                _id: u._id,
+                fullName: u.fullName,
+                verificationPhoto: profile ? profile.verificationPhoto : null
+            };
+        }).filter(u => u.verificationPhoto);
 
         res.json({ success: true, data: others });
     } catch (err) {

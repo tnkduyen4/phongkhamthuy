@@ -414,7 +414,7 @@ const Invoices = () => {
             // Sync with Customer Display
             const memo = `TT${selectedApt._id?.substring(18, 24)?.toUpperCase() || 'HD'}`;
             const qrUrl = `https://img.vietqr.io/image/VCB-1234567890-qr_only.png?amount=${total}&addInfo=${memo}&accountName=${encodeURIComponent('VETCARE CLINIC')}`;
-            sessionStorage.setItem('vetcare_customer_display', JSON.stringify({
+            localStorage.setItem('vetcare_customer_display', JSON.stringify({
                 status: 'PAYING',
                 total,
                 customerName: selectedApt.customerId?.fullName || 'Quý khách',
@@ -445,9 +445,9 @@ const Invoices = () => {
 
                 // Update Customer Display to Success if it was a transfer
                 if (paymentMethod === 'TRANSFER') {
-                    const current = JSON.parse(sessionStorage.getItem('vetcare_customer_display') || '{}');
-                    sessionStorage.setItem('vetcare_customer_display', JSON.stringify({ ...current, status: 'SUCCESS' }));
-                    setTimeout(() => sessionStorage.removeItem('vetcare_customer_display'), 5000);
+                    const current = JSON.parse(localStorage.getItem('vetcare_customer_display') || '{}');
+                    localStorage.setItem('vetcare_customer_display', JSON.stringify({ ...current, status: 'SUCCESS' }));
+                    setTimeout(() => localStorage.removeItem('vetcare_customer_display'), 5000);
                 }
             }
         } catch (error) {
@@ -740,6 +740,14 @@ const Invoices = () => {
                     </div>
 
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                        <button
+                            className="btn"
+                            style={{ background: 'white', border: '1px solid #eef2f5', display: 'flex', alignItems: 'center', gap: '8px', color: '#4f46e5' }}
+                            onClick={() => window.open('/customer-display', 'CustomerDisplay', 'width=1200,height=800')}
+                        >
+                            <ExternalLink size={18} />
+                            MÀN HÌNH KHÁCH
+                        </button>
                         <button
                             className="btn"
                             style={{ background: 'white', border: '1px solid #eef2f5', display: 'flex', alignItems: 'center', gap: '8px' }}
@@ -1412,7 +1420,7 @@ const Invoices = () => {
                                         </button>
                                         <div style={{ display: 'flex', gap: '12px' }}>
                                             <button style={{ flex: 1, padding: '10px', background: '#1e293b', border: '1px solid #334155', borderRadius: '10px', color: '#94a3b8', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem' }}
-                                                onClick={() => { stopQrTimer(); setShowQR(false); }}>Hủy Quay Lại</button>
+                                                onClick={() => { stopQrTimer(); setShowQR(false); localStorage.removeItem('vetcare_customer_display'); }}>Hủy Quay Lại</button>
                                             <button style={{ flex: 1, padding: '10px', background: '#3b82f6', border: 'none', borderRadius: '10px', color: 'white', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem' }}
                                                 onClick={() => window.open('/customer-display', 'CustomerDisplay', 'width=1200,height=800')}>
                                                 Màn Hình Khách
